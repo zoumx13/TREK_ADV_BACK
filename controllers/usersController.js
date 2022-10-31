@@ -25,6 +25,35 @@ const users = {
       }
     });
   },
+  GetUser: async (req, res) => {
+    const email = req.body.email;
+    const passWord = req.body.passWord;
+
+    users.findOne({ email: email }, (err, data) => {
+      if (!data) {
+        res.status(404).json({ message: "Echec" });
+      } else {
+        bcrypt.compare(passWord, data.passWord, (error, hash) => {
+          if (error) {
+            res.status(404).json({ message: "Echec" });
+          } else {
+            if (!hash) {
+              res.status(404).json({ message: "Echec" });
+            } else {
+              const token = jwt.sign(
+                {
+                  userId: data._id,
+                },
+                "secret",
+                { expiresIn: "24h" }
+              );
+              res.json(token);
+            }
+          }
+        });
+      }
+    });
+  },
 
   EditUser: async (req, res) => {},
 
