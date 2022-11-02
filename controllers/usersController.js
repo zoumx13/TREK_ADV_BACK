@@ -1,7 +1,7 @@
 const UserModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
   CreateUser: async (req, res) => {
     const password = req.body.passWord;
@@ -46,8 +46,8 @@ const users = {
                 {
                   userId: data._id,
                 },
-                "secret",
-                { expiresIn: "24h" }
+                process.env.DB_TOKEN_SECRET_KEY,
+                { expiresIn: maxAge }
               );
               res.json(token);
             }
