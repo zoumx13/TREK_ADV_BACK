@@ -33,7 +33,7 @@ const users = {
     const identifiant = req.body.identifiant;
     const password = req.body.password;
 
-    users.findOne({ identifiant: identifiant }, (err, data) => {
+    UserModel.findOne({ identifiant: identifiant }, (err, data) => {
       if (!data) {
         res.status(404).json({ message: "Echec" });
       } else {
@@ -59,6 +59,10 @@ const users = {
         });
       }
     });
+  },
+
+  Admin: async (req, res) => {
+    console.log("Bien connecté en Admin !");
   },
 
   EditUser: async (req, res) => {},
