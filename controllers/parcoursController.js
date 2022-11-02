@@ -55,6 +55,34 @@ const parcours = {
       }
     });
   },
+//   modifyParcours: (req, res) => {
+//     const previousEtape = {
+//         nomParcours,
+//         dureeParcours,
+//         description,
+//         prix,
+//         imgIllustration,
+//         niveauDifficulte,
+//         nomEtape,
+//         numeroEtape,
+//         localisation,
+//         descriptionEtape,
+//         imgIllustrationEtape,
+//       } = req.body;
+
+
+//     parcoursSchema.findByIdAndUpdate(req.params.id,
+//         {$set: 
+//         etape: [
+//           {
+//             nomEtape: req.body.nomEtape,
+//             numeroEtape: req.body.numeroEtape,
+//             localisation: req.body.localisation,
+//             descriptionEtape: req.body.descriptionEtape,
+//           },
+//         ],
+//       },
+//   },
   getParcours: (req, res) => {
     parcoursSchema.find({}, (err, data) => {
       if (err) {
@@ -91,8 +119,27 @@ const parcours = {
         }
       }
     );
-  },  
-  
+  },
+  deleteStep: (req,res) =>{
+    try {
+        return parcoursSchema.findByIdAndUpdate(
+            req.params.id,
+            {
+                $pull: {
+                    etape: {
+                        _id: req.body.stepId
+                    }
+                }
+            },
+            { new: true },
+
+        )
+            .then((docs) => res.send(docs))
+            .catch((err) => res.status(400).send(err))
+    } catch (err) {
+        return res.status(400).send(err);
+    }
+  }
 }
 
 module.exports = parcours;
