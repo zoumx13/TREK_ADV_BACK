@@ -58,7 +58,7 @@ const parcours = {
   getParcours: (req, res) => {
     parcoursSchema.find({}, (err, data) => {
       if (err) {
-        res.status(404).json({ message: "error", err });
+        res.status(404).json({ message: "Echec" });
         console.log("oups");
       } else {
         res.json(data);
@@ -92,7 +92,7 @@ const parcours = {
       }
     );
   },
-//   
-}
+  //
+};
 
 module.exports = parcours;
