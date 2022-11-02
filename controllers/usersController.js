@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
   CreateUser: async (req, res) => {
-    const password = req.body.passWord;
+    const password = req.body.password;
     const saltRounds = 10;
     bcrypt.hash(password, saltRounds, (err, hash) => {
       if (err) {
