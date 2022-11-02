@@ -8,30 +8,33 @@ const parcours = {
         } = req.body
 
         const newParcours = new parcoursSchema({
-            nomParcours: req.body.nomParcours,
+            nomParcours: nomParcours,
             dureeParcours: dureeParcours,
-            description: req.body.description,
-            prix: req.body.prix,
+            description: description,
+            prix: prix,
+            
             // ? = alors
-            imgIllustration: req.file !== null ? "./uploads/parcours/" + fileName : "",
-            niveauDifficulte: req.body.niveauDifficulte,
+            // Ligne ci-dessous utilisable plus tard avec multer
+            //  imgIllustration: req.file !== null ? "./uploads/parcours/" + fileName : "",
+            niveauDifficulte: niveauDifficulte,
             etape: [{
-                nomEtape: req.body.nomEtape,
-                numeroEtape: req.body.numeroEtape,
-                localisation: req.body.localisation,
-                descriptionEtape: req.body.descriptionEtape,
-                imgIllustrationEtape: req.file !== null ? "./uploads/etapes/" + fileName : "",
+                nomEtape: nomEtape,
+                numeroEtape: numeroEtape,
+                localisation: localisation,
+                descriptionEtape: descriptionEtape,
+                // Ligne ci-dessous utilisable plus tard avec multer
+                //     imgIllustrationEtape: req.file !== null ? "./uploads/etapes/" + fileName : "",
 
             }
             ]
         });
 
         try {
-            const newParcours = await newParcours.save();
-            return res.status(201).json(newParcours);
+            const Parcours = await newParcours.save();
+            return res.status(201).json(Parcours);
 
         } catch (err) {
-            return res.status(400).send(err);
+            return res.status(408).json(err);
         }
 
 
