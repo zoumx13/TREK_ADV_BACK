@@ -23,7 +23,7 @@ const users = {
           if (err) {
             res.status(500).json({ message: "Impossible de s'enregistrer" });
           } else {
-            res.status(200).json({ message: "utilisateur enregistré " });
+            res.status(200).json({ message: "Utilisateur enregistré " });
           }
         });
       }
@@ -47,6 +47,8 @@ const users = {
               const token = jwt.sign(
                 {
                   userId: data._id,
+                  userIdentifiant: data.identifiant,
+                  userRole: data.role
                 },
                 process.env.DB_TOKEN_SECRET_KEY,
                 { expiresIn: maxAge }
