@@ -1,6 +1,7 @@
 const UserModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const users = {
   CreateUser: async (req, res) => {
     const password = req.body.passWord;
@@ -10,7 +11,7 @@ const users = {
         res.status(505).json(err);
       } else {
         const newUser = new UserModel({
-          email: req.body.email,
+          identifiant: req.body.identifiant,
           password: hash,
           role: req.body.role,
           nom: req.body.nom,
@@ -27,10 +28,10 @@ const users = {
     });
   },
   SignIn: async (req, res) => {
-    const email = req.body.email;
+    const identifiant = req.body.identifiant;
     const password = req.body.password;
 
-    users.findOne({ email: email }, (err, data) => {
+    users.findOne({ identifiant: identifiant }, (err, data) => {
       if (!data) {
         res.status(404).json({ message: "Echec" });
       } else {
