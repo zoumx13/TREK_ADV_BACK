@@ -50,8 +50,8 @@ const parcours = {
       if (err) {
         res.status(404).json({ message: "error", err });
       } else {
+        console.log("parcours supprimé", data);
         res.status(200).json({ message: "data", data });
-        console.log("parcours supprimé");
       }
     });
   },
@@ -91,8 +91,8 @@ const parcours = {
         }
       }
     );
-  },
-//   
+  },  
+  
 }
 
 module.exports = parcours;
