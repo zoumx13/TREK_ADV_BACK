@@ -16,6 +16,8 @@ const users = {
           role: req.body.role,
           nom: req.body.nom,
           prenom: req.body.prenom,
+          annees_exp: req.body.annees_exp,
+          photo_profil: req.body.photo_profil,
         });
         newUser.save((err) => {
           if (err) {
