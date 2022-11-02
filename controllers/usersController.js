@@ -26,7 +26,7 @@ const users = {
       }
     });
   },
-  GetUser: async (req, res) => {
+  SignIn: async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
