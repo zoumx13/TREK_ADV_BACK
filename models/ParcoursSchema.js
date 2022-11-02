@@ -52,7 +52,7 @@ const EtapeDetail = new mongoose.Schema(
             type: String,
             required: true,
         },
-        description : {
+        descriptionEtape : {
             type: String,
         },
         imgIllustrationEtape: {
@@ -66,12 +66,12 @@ const EtapeDetail = new mongoose.Schema(
 
 const Parcours = new mongoose.Schema(
     {
-        nomParcour: {
+        nomParcours: {
             type: String,
             required: true,
             unique: true,
         },
-        dureeParcour: {
+        dureeParcours: {
             type: String,
             required: true,
         },
@@ -99,4 +99,4 @@ const Parcours = new mongoose.Schema(
 
     })
 
-module.exports = mongoose.model("Parcour", Parcours)
+module.exports = mongoose.model("Parcours", Parcours)
