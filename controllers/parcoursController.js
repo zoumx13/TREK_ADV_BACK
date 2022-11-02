@@ -122,7 +122,7 @@ const parcours = {
                     res.json(data);
                     console.log("parcours chargés", data);
                 }
-            });
+            }).select("nomParcours");
     },
 
     addStep: (req, res) => {
