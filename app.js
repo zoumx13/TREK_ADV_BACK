@@ -3,9 +3,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var test = "test";
-
+const cors = require("cors");
 // const middlewareLogIn = require("./middleware/")
-
 // let cors = require("cors")
 
 var indexRouter = require("./routes/index");
@@ -14,12 +13,12 @@ let parcoursRouter = require("./routes/parcours");
 
 var app = express();
 
+app.use(cors({ origin: "*" }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "client/public")));
-
 
 // Création de route ici
 
