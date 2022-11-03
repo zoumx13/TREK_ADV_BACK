@@ -4,7 +4,7 @@ const ClientDetail = new mongoose.Schema(
     {
         idClient : {
             type: String,
-            // required: true,
+            required: true,
         }, 
 
         etapeCompletee: [{
@@ -23,15 +23,15 @@ const ReservationDetail = new mongoose.Schema(
     {
         dateReservation : {
             type: String,
-            // required: true,
+            required: true,
         },
         idGuide : {
             type: String,
-            // required: true,
+            required: true,
         },
         maxClients : {
             type: String,
-            // required: true,
+            required: true,
         },
         clients : [ClientDetail]
 
@@ -42,15 +42,15 @@ const EtapeDetail = new mongoose.Schema(
     {
         nomEtape : {
             type: String,
-            // required: true,
+            required: true,
         },
         numeroEtape : {
             type: String,
-            // required: true,
+            required: true,
         },
         localisation : {
             type: String,
-            // required: true,
+            required: true,
         },
         descriptionEtape : {
             type: String,
@@ -68,19 +68,19 @@ const Parcours = new mongoose.Schema(
     {
         nomParcours: {
             type: String,
-            // required: true,
+            required: true,
             unique: true,
         },
         dureeParcours: {
             type: String,
-            // required: true,
+            required: true,
         },
         description : {
             type: String,
         },
         prix : {
             type: String,
-            // required: true,
+            required: true,
         },
         imgIllustration : {
             // Stockez l'image dans un dossier static. Type = String à cause du chemin
@@ -90,12 +90,12 @@ const Parcours = new mongoose.Schema(
         },
         niveauDifficulte : {
             type : Number,
-            // required: true,
+            required: true,
         },
         
         reservations: [ReservationDetail],
 
-        etape : [EtapeDetail]
+        etape : [EtapeDetail]   
 
     })
 
