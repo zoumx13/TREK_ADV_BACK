@@ -102,7 +102,7 @@ const parcours = {
     getParcours: (req, res) => {
         parcoursSchema.find({}, (err, data) => {
             if (err) {
-                res.status(404).json({ message: "error GetParcours", err });
+                res.status(404).json({ message: "Echec" });
                 console.log("oups");
             } else {
                 res.json(data);
@@ -128,6 +128,7 @@ const parcours = {
     addStep: (req, res) => {
         parcoursSchema.findByIdAndUpdate(
             { _id: req.params.id },
+
             {
                 $push: {
                     etape: [
@@ -171,7 +172,9 @@ const parcours = {
         } catch (err) {
             return res.status(400).send(err);
         }
+
     }
 }
+
 
 module.exports = parcours;

@@ -23,7 +23,7 @@ const users = {
           if (err) {
             res.status(500).json({ message: "Impossible de s'enregistrer" });
           } else {
-            res.status(200).json({ message: "utilisateur enregistré " });
+            res.status(200).json({ message: "Utilisateur enregistré " });
           }
         });
       }
@@ -33,7 +33,7 @@ const users = {
     const identifiant = req.body.identifiant;
     const password = req.body.password;
 
-    users.findOne({ identifiant: identifiant }, (err, data) => {
+    UserModel.findOne({ identifiant: identifiant }, (err, data) => {
       if (!data) {
         res.status(404).json({ message: "Echec" });
       } else {
@@ -47,6 +47,8 @@ const users = {
               const token = jwt.sign(
                 {
                   userId: data._id,
+                  userIdentifiant: data.identifiant,
+                  userRole: data.role
                 },
                 process.env.DB_TOKEN_SECRET_KEY,
                 { expiresIn: maxAge }
@@ -57,6 +59,10 @@ const users = {
         });
       }
     });
+  },
+
+  Admin: async (req, res) => {
+    console.log("Bien connecté en Admin !");
   },
 
   EditUser: async (req, res) => {},
