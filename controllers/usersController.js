@@ -48,7 +48,7 @@ const users = {
                 {
                   userId: data._id,
                   userIdentifiant: data.identifiant,
-                  userRole: data.role
+                  userRole: data.role,
                 },
                 process.env.DB_TOKEN_SECRET_KEY,
                 { expiresIn: maxAge }
@@ -60,7 +60,24 @@ const users = {
       }
     });
   },
-
+  GetUser: async (req, res) => {
+    const userId = req.body.userId;
+    const filter = { _id: userId };
+    UserModel.findOne(filter, (err, data) => {
+      if (err) {
+        res.status(404).json({ message: "Echec" });
+      } else {
+        res.json({
+          message: "reléve réussi:",
+          profil: {
+            nom: data.nom,
+            identifiant: data.identifiant,
+            role: data.role,
+          },
+        });
+      }
+    });
+  },
   Admin: async (req, res) => {
     console.log("Bien connecté en Admin !");
   },
