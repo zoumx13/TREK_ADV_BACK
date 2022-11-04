@@ -21,6 +21,11 @@ const ClientDetail = new mongoose.Schema(
 
 const ReservationDetail = new mongoose.Schema(
     {
+        openResa:{
+            type: Boolean,
+            required: true,
+        },
+
         dateReservation : {
             type: String,
             required: true,
