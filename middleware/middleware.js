@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 
 const middleware = {
@@ -10,16 +9,15 @@ const middleware = {
         if (err) {
           res.status(401).json({ message: "Vous n'êtes pas identifié !" });
         } else {
-            if(data.role=="admin"){
-                req.user = data.userId;
-                req.identifiant = data.identifiant,
-                req.role = data.role;
-                next();
-            }
-            else{
-              res.status(401).json({ message: "Accès restreint à l'administrateur" });
-            }
-          
+          if (data.role == "admin") {
+            req.user = data.userId;
+            (req.identifiant = data.identifiant), (req.role = data.role);
+            next();
+          } else {
+            res
+              .status(401)
+              .json({ message: "Accès restreint à l'administrateur" });
+          }
         }
       });
     } else {
