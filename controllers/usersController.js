@@ -1,6 +1,7 @@
 const UserModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+// const usersModel = require("../models/usersModel");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
   CreateUser: async (req, res) => {
@@ -35,14 +36,14 @@ const users = {
 
     UserModel.findOne({ identifiant: identifiant }, (err, data) => {
       if (!data) {
-        res.status(404).json({ message: "Echec" });
+        res.status(404).json({ message: "Echec1" });
       } else {
         bcrypt.compare(password, data.password, (error, hash) => {
           if (error) {
-            res.status(404).json({ message: "Echec" });
+            res.status(404).json({ message: "Echec2" });
           } else {
             if (!hash) {
-              res.status(404).json({ message: "Echec" });
+              res.status(404).json({ message: "Echec3" });
             } else {
               const token = jwt.sign(
                 {
@@ -82,8 +83,33 @@ const users = {
     console.log("Bien connecté en Admin !");
   },
 
-  EditUser: async (req, res) => {},
+  EditUser: async (req, res) => { },
 
-  DeleteUser: async (req, res) => {},
+  DeleteUser: async (req, res) => { },
+
+  CheckToken: async (req, res) => {
+    const token = String(req.get("Authorization")).split(" ")[1];
+console.log("entrer controller")
+    if (token) {
+      jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY, (err, data) => {
+        if (err) {
+          console.log("retour JSON");
+           res.json({ identifiant: 'Invité', userRole: "aucun" });
+          // req.identifiant = "Invité",
+          //   req.userRole = "aucun";
+        } else {
+          res.json({ identifiant: data.identifiant, userRole: data.userRole, id: data.userId });
+          // req.user = data.userId;
+          // req.identifiant = data.identifiant,
+          //   req.userRole = data.userRole;
+        }
+      });
+    } else {
+      console.log("retour JSON");
+      res.json({ identifiant: 'Invité', userRole: "aucun" });
+      // req.identifiant = "Invité",
+      //   req.userRole = "aucun";
+    }
+  },
 };
 module.exports = users;

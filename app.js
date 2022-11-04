@@ -12,6 +12,8 @@ var usersRouter = require("./routes/users");
 let parcoursRouter = require("./routes/parcours");
 
 var app = express();
+const cors = require("cors");
+app.use(cors({ origin: "*" }));
 
 app.use(cors({ origin: "*" }));
 app.use(logger("dev"));
