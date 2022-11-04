@@ -10,10 +10,10 @@ const middleware = {
         if (err) {
           res.status(401).json({ message: "Vous n'êtes pas identifié !" });
         } else {
-            if(data.userRole=="admin"){
+            if(data.role=="admin"){
                 req.user = data.userId;
                 req.identifiant = data.identifiant,
-                req.userRole = data.userRole;
+                req.role = data.role;
                 next();
             }
             else{
