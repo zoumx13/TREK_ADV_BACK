@@ -10,7 +10,7 @@ const ClientDetail = new mongoose.Schema({
     {
       nomEtape: String,
       date: String,
-    },
+    }
   ],
 
   finished: {
@@ -47,10 +47,12 @@ const EtapeDetail = new mongoose.Schema({
     type: String,
     required: true,
   },
-  localisation: {
-    type: String,
-    required: true,
-  },
+  localisation: [
+    {
+    lat : String,
+    long : String
+    }
+  ],
   descriptionEtape: {
     type: String,
   },

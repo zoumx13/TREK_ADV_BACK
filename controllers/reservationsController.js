@@ -1,15 +1,15 @@
 const parcoursSchema = require("../models/ParcoursSchema");
 
 const reservations = {
-    createReservations:  (req, res) => {
+    createReservations:  async (req, res) => {
         const {
             openResa,
             maxClients,
             dateReservation,
-            idGuide,
+            idGuide    
         } = req.body;
-console.log(dateReservation);
-            parcoursSchema.findByIdAndUpdate(
+        try {
+               await parcoursSchema.findByIdAndUpdate(
                 { _id: req.params.id },
     
                 {
@@ -20,21 +20,31 @@ console.log(dateReservation);
                                 maxClients: maxClients,
                                 dateReservation: dateReservation,
                                 idGuide: idGuide,
+                                // POUR SEB 
+                                // clients : [{
+                                //     idClient : idClient,
+                                //     etapeCompletee : [{
+                                //         nomEtape : nomEtape,
+                                //         date : date
+                                //     }],
+                                //     finished : finished
+
+                                // }]
                             },
                         ],
                     },
-                },
-                (err, data) => {
-                    if (err) {
-                        res.status(400).json(err);
-                        console.log("error", err);
-                    } else {
-                        console.log("étape ajoutée ", data);
-                        res.status(200).json(data);
-                    }
-                }
-            );
-        },
+                })
+                .then((docs) => res.status(200).json(docs))
+                .catch((err)=> res.status(400).json(err))
+                
+
+
+        } catch(err) {
+            return res.status(400).send(err);
+
+       
+      }
+    }
     }
 
 module.exports = reservations
