@@ -18,7 +18,7 @@ const users = {
           nom: req.body.nom,
           prenom: req.body.prenom,
           annees_exp: req.body.annees_exp,
-          photo_profil: req.body.photo_profil,
+          photo_profil: "defaultprofil.jpg",
         });
         newUser.save((err) => {
           if (err) {
@@ -82,6 +82,97 @@ const users = {
         });
       }
     });
+  },
+  GetProfilUser: async (req, res) => {
+    const userId = req.body.userId;
+    const filter = { _id: userId };
+    UserModel.findOne(filter, (err, data) => {
+      if (err) {
+        res.status(404).json({ message: "Echec" });
+      } else {
+        res.json({
+          message: "reléve réussi:",
+          profil: {
+            nom: data.nom,
+            identifiant: data.identifiant,
+            prenom: data.prenom,
+            photo_profil: data.photo_profil,
+            description: data.description,
+          },
+        });
+      }
+    });
+  },
+  ModifyProfilUser: async (req, res) => {
+    const userId = req.body.userId;
+    const filter = { _id: userId };
+
+    const updateUser = {
+      name: req.body.nom,
+      prenom: req.body.prenom,
+      identifiant: req.body.identifiant,
+      description: req.body.description,
+    };
+    UserModel.findOneAndUpdate(filter, updateUser, (err) => {
+      if (err) {
+        res.status(500).json({ message: "Echec" });
+      } else {
+        res.json({ message: "information mise a jour" });
+      }
+    });
+  },
+  UpdateUserPicture: async (req, res) => {
+    if (req.file) {
+      const name = req.file.filename;
+      const token = String(req.get("Authorization")).split(" ")[1];
+      if (token) {
+        /* Décryptage du token */
+        jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY, (err, data) => {
+          const userId = data.userId;
+          const filter = { _id: userId };
+
+          const updateUser = {
+            photo_profil: name,
+          };
+          UserModel.findOne(filter, (err, data) => {
+            if (err) {
+              res.status(404).json({ message: "Echec" });
+            } else {
+              if (data.photo_profil) {
+                console.log(data.photo_profil);
+                const defaultprofil = "defaultprofil.jpg";
+                console.log(defaultprofil);
+                if (data.photo_profil != defaultprofil) {
+                  const lastProfilPicture = data.photo_profil;
+                  const path =
+                    "../TREK-ADVENTURE-BACK/client/public/uploads/users" +
+                    lastProfilPicture;
+                  fs.unlink(path, (err) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      console.log("\nDeleted file:" + lastProfilPicture);
+                    }
+                  });
+                }
+              }
+            }
+          });
+
+          UserModel.findOneAndUpdate(filter, updateUser, (err) => {
+            if (err) {
+              res.status(500).json(err);
+            } else {
+              res.json({ message: name });
+            }
+          });
+        });
+      } else {
+        res.json({ message: "Echec" });
+      }
+    } else {
+      res.json({ message: "Echec" });
+    }
   },
   Admin: async (req, res) => {
     console.log("Bien connecté en Admin !");
