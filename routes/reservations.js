@@ -4,8 +4,8 @@ const reservations = require("../controllers/reservationsController");
 
 // Route Resa 
 router.patch("/createReservations/:id", reservations.createReservations)
-// router.delete("/deletereservations", reservations.deleteReservations)
-// router.patch("/modifyReservations", reservations.modifyReservations)
+router.delete("/deleteReservations/:id", reservations.deleteReservations)
+router.patch("/modifyReservations/:id", reservations.modifyReservations)
 // router.get("/", reservations.getReservations)
 
 
