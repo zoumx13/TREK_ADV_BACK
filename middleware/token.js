@@ -11,5 +11,14 @@ const tokenMiddle = {
       });
     }
   },
+  tokenPicture: (req, res, next) => {
+    const token = String(req.get("Authorization")).split(" ")[1];
+    if (token) {
+      /* Décryptage du token */
+      jwt.verify(token, "secret", (err, data) => {
+        next();
+      });
+    }
+  },
 };
 module.exports = tokenMiddle;

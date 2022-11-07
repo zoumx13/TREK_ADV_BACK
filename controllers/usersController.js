@@ -1,6 +1,7 @@
 const UserModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 // const usersModel = require("../models/usersModel");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
@@ -78,6 +79,7 @@ const users = {
             nom: data.nom,
             identifiant: data.identifiant,
             role: data.role,
+            photo_profil: data.photo_profil,
           },
         });
       }
@@ -145,7 +147,7 @@ const users = {
                 if (data.photo_profil != defaultprofil) {
                   const lastProfilPicture = data.photo_profil;
                   const path =
-                    "../TREK-ADVENTURE-BACK/client/public/uploads/users" +
+                    "../TREK-ADVENTURE-BACK/client/public/uploads/users/" +
                     lastProfilPicture;
                   fs.unlink(path, (err) => {
                     if (err) {
