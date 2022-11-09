@@ -145,7 +145,48 @@ const reservations = {
             // console.log("SEARCH : ", theParcour.reservations)
          .then((docs) => res.status(200).json(docs.reservations))
          .catch((err) => res.status(400).json(err))
-    }
+    },
+
+    addGuideReservations:  (req, res) => {
+        const {
+            idGuide,
+            resaId
+        } = req.body;
+        
+        try {
+        
+            return ParcoursSchema.findById(
+                // trouve le Parcour grâce à son id du params
+                req.params.id,
+                // appel un callback, pour accéder à docs
+                (err, docs) => {
+                    // accéder à THE Resa grâce à un find dans la docs , mettre une () avec un param "resa" puis comparé l'id "spé" de la resa avec equals
+                    const theResa = docs.reservations.find((resa) =>
+                        resa._id.equals(resaId)
+                    )
+
+                    if (!theResa) {
+                        return res.status(404).send("Resa not found")
+                    } else {
+                        theResa.idGuide = idGuide
+                        return docs.save((err) => {
+                            if (!err) {
+                                return res.status(200).send(docs)
+                            } else {
+
+                                return res.status(500).send(err);
+                            }
+                        })
+                    }
+                }
+            );
+
+        } catch (err) {
+            return res.status(409).send(err);
+        }
+
+    }, 
+
 
 }
 

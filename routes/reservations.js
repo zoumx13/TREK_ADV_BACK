@@ -7,6 +7,7 @@ router.patch("/createReservations/:id", reservations.createReservations)
 router.delete("/deleteReservations/:id", reservations.deleteReservations)
 router.patch("/modifyReservations/:id", reservations.modifyReservations)
 router.get("/getReservations/:id", reservations.getReservationsByIdParcour)
+router.patch("/addGuideReservations/:id", reservations.addGuideReservations)
 // get par id parcour et par id réser
 // router.get("/:id", reservations.getReservationsById)
 
