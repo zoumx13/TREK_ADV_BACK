@@ -1,4 +1,3 @@
-const ParcoursSchema = require("../models/ParcoursSchema");
 const parcoursSchema = require("../models/ParcoursSchema");
 
 const reservations = {
@@ -70,7 +69,7 @@ const reservations = {
             return res.status(400).send(err);
         }
     },
-    modifyReservations:  (req, res) => {
+    modifyReservations: async (req, res) => {
         const {
             openResa,
             maxClients,
@@ -80,36 +79,41 @@ const reservations = {
         //    A FINIR 
         try {
         //////////////////////////////////////////////////////////////////////////////////////////////////// 
-            // Ne fonctionne pas, je garde pour demander durant un coaching
-            // const theParcour = await parcoursSchema.findById(
-            //     { _id: req.params.id })
-            //     console.log("SEARCH : ", theParcour.reservations)
-
-            //         // theParcour.reservations.find()
-            //  let theResa = await theParcour.reservations.findByIdAndUpdate((resaSpe) => 
-            //     ( resaSpe._id.equals(req.body.resaId)),
-                
-            //     {
-            //         $set: {
-            //             reservations: {
-            //                 openResa: openResa,
-            //                 maxClients: maxClients,
-            //                 dateReservation: dateReservation,
-            //                 idGuide: idGuide
-            //             },
-            //         },
-            //     },
-            //     { new: true })
-            //     // .then((docs) => {return docs.save})
-            //     .then ((docs) => res.status(200).json(docs))
-            //     .catch((err) => res.status(408).json(err))
-           
+        //     // Recherche du parcours
+        //     const theParcour = await parcoursSchema.findById({ _id: req.params.id });
+        //     console.log("SEARCH : ", theParcour.reservations);
+      
+        //     // Vérification de l'existence du parcours
+        //     if (!theParcour) {
+        //       throw new Error("Parcours not found");
+        //     }
+      
+        //     // Recherche de la réservation
+        //     await theParcour.reservations.findByIdAndUpdate(
+        //       req.body.resaId,
+        //       {
+        //         $set: {
+        //           reservations: {
+        //             openResa: openResa,
+        //             maxClients: maxClients,
+        //             dateReservation: dateReservation,
+        //             idGuide: idGuide,
+        //           },
+        //         },
+        //       },
+        //       { new: true }
+        //     );
+        //     res.status(200).json(theParcour)
+        //   } catch (err) {
+        //     return res.status(409).send(err);
+        //   }
+        // },
         ////////////////////////////////////////////////////////////////////////////////////////////////////    
-            return ParcoursSchema.findById(
+            return parcoursSchema.findById(
                 // trouve le Parcour grâce à son id du params
                 req.params.id,
                 // appel un callback, pour accéder à docs
-                (err, docs) => {
+                 (err, docs) => {
                     // accéder à THE Resa grâce à un find dans la docs , mettre une () avec un param "resa" puis comparé l'id "spé" de la resa avec equals
                     const theResa = docs.reservations.find((resa) =>
                         resa._id.equals(req.body.resaId)
@@ -142,10 +146,17 @@ const reservations = {
     getReservationsByIdParcour : async (req,res) => {
          await parcoursSchema.findById(
             { _id: req.params.id })
-            // console.log("SEARCH : ", theParcour.reservations)
+            
          .then((docs) => res.status(200).json(docs.reservations))
          .catch((err) => res.status(400).json(err))
     },
+
+    getAllReservations : async (req,res) => {
+        await parcoursSchema.find()
+           
+        .then((docs) => res.status(200).json(docs.reservations))
+        .catch((err) => res.status(400).json(err))
+      },
 
     addGuideReservations:  (req, res) => {
         const {
@@ -186,7 +197,6 @@ const reservations = {
         }
 
     }, 
-
 
 }
 
