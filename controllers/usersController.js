@@ -116,7 +116,7 @@ const users = {
       identifiant: req.body.identifiant,
       description: req.body.description,
     };
-    console.log(updateUser);
+
     UserModel.findOneAndUpdate(filter, updateUser, (err) => {
       if (err) {
         res.status(500).json({ message: "Echec" });
