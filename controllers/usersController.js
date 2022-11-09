@@ -1,7 +1,8 @@
 const UserModel = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const fs = require("fs");
+const fs = require("fs").promises;
+const path = require("path");
 // const usersModel = require("../models/usersModel");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
@@ -110,11 +111,12 @@ const users = {
     const filter = { _id: userId };
 
     const updateUser = {
-      name: req.body.nom,
+      nom: req.body.nom,
       prenom: req.body.prenom,
       identifiant: req.body.identifiant,
       description: req.body.description,
     };
+    console.log(updateUser);
     UserModel.findOneAndUpdate(filter, updateUser, (err) => {
       if (err) {
         res.status(500).json({ message: "Echec" });
@@ -174,6 +176,34 @@ const users = {
       }
     } else {
       res.json({ message: "Echec" });
+    }
+  },
+  updatePicture: async (req, res) => {
+    // Vérification de la présence d'un fichier
+    if (!req.file) {
+      return res.json({ message: "Echec" });
+    }
+
+    // Récupération de l'utilisateur
+    const user = req.user;
+
+    try {
+      // Suppression de l'ancienne image
+      if (user.photo_profil && user.photo_profil !== "defaultprofil.jpg") {
+        const filePath = path.join(
+          __dirname,
+          "../client/public/uploads/users/" + user.photo_profil
+        );
+
+        await fs.unlink(filePath);
+      }
+
+      // Mise à jour de la photo de profil de l'utilisateur
+      user.photo_profil = req.file.filename;
+      await user.save();
+      res.json({ message: req.file.filename });
+    } catch (err) {
+      res.status(500).json({ message: err });
     }
   },
   Admin: async (req, res) => {

@@ -11,9 +11,9 @@ router.post("/signin", users.SignIn);
 router.post("/modifyProfilUser", tokenMiddle.token, users.ModifyProfilUser);
 router.post(
   "/pictureUser",
-  tokenMiddle.tokenPicture,
+  tokenMiddle.checkToken,
   upload.single("file"),
-  users.UpdateUserPicture
+  users.updatePicture
 );
 
 router.get("/admin", middleware.authentication, users.Admin);
