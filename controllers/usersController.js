@@ -54,7 +54,11 @@ const users = {
                 process.env.DB_TOKEN_SECRET_KEY,
                 { expiresIn: maxAge }
               );
-              res.json(token);
+              res.json({
+                token: token,
+                userRole: data.role,
+                message: "Connecté",
+              });
             }
           }
         });
@@ -83,22 +87,26 @@ const users = {
     console.log("Bien connecté en Admin !");
   },
 
-  EditUser: async (req, res) => { },
+  EditUser: async (req, res) => {},
 
-  DeleteUser: async (req, res) => { },
+  DeleteUser: async (req, res) => {},
 
   CheckToken: async (req, res) => {
     const token = String(req.get("Authorization")).split(" ")[1];
-console.log("entrer controller")
+    console.log("entrer controller");
     if (token) {
       jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY, (err, data) => {
         if (err) {
           console.log("retour JSON");
-           res.json({ identifiant: 'Invité', userRole: "aucun" });
+          res.json({ identifiant: "Invité", userRole: "aucun" });
           // req.identifiant = "Invité",
           //   req.userRole = "aucun";
         } else {
-          res.json({ identifiant: data.identifiant, userRole: data.userRole, id: data.userId });
+          res.json({
+            identifiant: data.identifiant,
+            userRole: data.userRole,
+            id: data.userId,
+          });
           // req.user = data.userId;
           // req.identifiant = data.identifiant,
           //   req.userRole = data.userRole;
@@ -106,10 +114,20 @@ console.log("entrer controller")
       });
     } else {
       console.log("retour JSON");
-      res.json({ identifiant: 'Invité', userRole: "aucun" });
+      res.json({ identifiant: "Invité", userRole: "aucun" });
       // req.identifiant = "Invité",
       //   req.userRole = "aucun";
     }
+  },
+
+  ListGuide: async (req, res) => {
+    UserModel.find({role:"guide"}, function(err, users) {
+              var userSearch = [];
+              users.forEach(function(user) {
+                userSearch.push({id:user._id, nom:user.nom, prenom:user.prenom});
+              });
+              res.send(userSearch);
+            });
   },
 };
 module.exports = users;
