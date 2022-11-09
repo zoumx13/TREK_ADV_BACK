@@ -119,5 +119,15 @@ const users = {
       //   req.userRole = "aucun";
     }
   },
+
+  ListGuide: async (req, res) => {
+    UserModel.find({role:"guide"}, function(err, users) {
+              var userSearch = [];
+              users.forEach(function(user) {
+                userSearch.push({id:user._id, nom:user.nom, prenom:user.prenom});
+              });
+              res.send(userSearch);
+            });
+  },
 };
 module.exports = users;
