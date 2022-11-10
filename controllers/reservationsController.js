@@ -194,7 +194,8 @@ const reservations = {
                 for (let y = 0; y < data[i].reservations.length; y++) {
                     if(data[i].reservations[y].idGuide == userGuide){
                         // resa[i].reservations.push(data[i].reservations[y])
-                        resa.push({idparcours:data[i]._id, reservation:data[i].reservations[y]});
+                        console.log("IMAGE :",data[i].imgIllustration);
+                        resa.push({idparcours:data[i]._id, imgIllustration:data[i].imgIllustration, reservation:data[i].reservations[y]});
                     }
                 }
             }
