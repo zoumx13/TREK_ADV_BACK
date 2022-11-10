@@ -54,11 +54,14 @@ const reservation = {
         if (!theResa) {
           res.status(404).send("Resa not found");
         } else {
-          theResa.clients = { idClient: user };
-
+          const resa = {
+            clientId: user,
+            date: Date(),
+          };
+          theResa.clients = resa;
           docs.save((err) => {
             if (!err) {
-              res.status(200).send(docs);
+              res.json({ message: "resa validée" });
             } else {
               res.status(500).send(err);
             }
