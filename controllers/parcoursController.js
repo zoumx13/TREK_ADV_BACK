@@ -115,7 +115,12 @@ const parcours = {
             {
               nomEtape: req.body.nomEtape,
               numeroEtape: req.body.numeroEtape,
-              localisation: req.body.localisation,
+              localisation: [
+                {
+                lat : req.body.lat,
+                long : req.body.long
+                }
+              ],
               descriptionEtape: req.body.descriptionEtape,
             },
           ],
