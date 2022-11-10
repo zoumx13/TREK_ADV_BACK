@@ -12,9 +12,7 @@ router.get("/getReservations", reservations.getAllReservations)
 router.patch("/addGuideReservations/:id", reservations.addGuideReservations)
 router.get("/getAllReservations", tokenMiddle.token , reservations.getAllReservations)
 router.get("/:idParcours/:idResa", reservations.getResaById);
-
-
-
+router.post("/user", tokenMiddle.token, reservations.userReservation);
 
 
 module.exports = router;
