@@ -212,9 +212,9 @@ const users = {
     console.log("Bien connecté en Admin !");
   },
 
-  EditUser: async (req, res) => {},
+  EditUser: async (req, res) => { },
 
-  DeleteUser: async (req, res) => {},
+  DeleteUser: async (req, res) => { },
 
   CheckToken: async (req, res) => {
     const token = String(req.get("Authorization")).split(" ")[1];
@@ -246,13 +246,49 @@ const users = {
   },
 
   ListGuide: async (req, res) => {
-    UserModel.find({role:"guide"}, function(err, users) {
-              var userSearch = [];
-              users.forEach(function(user) {
-                userSearch.push({id:user._id, nom:user.nom, prenom:user.prenom});
-              });
-              res.send(userSearch);
-            });
+    UserModel.find({ role: "guide" }, function (err, users) {
+      var userSearch = [];
+      users.forEach(function (user) {
+        userSearch.push({ id: user._id, nom: user.nom, prenom: user.prenom });
+      });
+      res.send(userSearch);
+    });
+  },
+
+  modifyUserGuide: async (req, res) => {
+
+    const {
+      identifiant,
+      password,
+      nom,
+      prenom,
+      annees_exp,
+      description,
+
+    } = req.body;
+
+    const updateData = {
+      identifiant: identifiant,
+      password: password,
+      nom: nom,
+      prenom: prenom,
+      annees_exp: annees_exp,
+      description: description,
+
+    };
+
+    try {
+      const guideModified = await UserModel.findByIdAndUpdate(
+        req.params.id,
+
+        { $set: updateData },
+        { new: true })
+      res.status(200).json(guideModified)
+
+    } catch (err) {
+      res.status(400).json(err)
+    };
+
   },
 
   MailGuide: async (req, res) => {
