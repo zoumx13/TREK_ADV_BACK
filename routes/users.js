@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const users = require("../controllers/usersController");
 const middleware = require("../middleware/middlewareAdmin");
+const middlewareGuide = require("../middleware/middlewareGuide");
 const tokenMiddle = require("../middleware/token");
 
 router.post("/signup", users.CreateUser);
@@ -14,6 +15,7 @@ router.get("/user", tokenMiddle.token, users.GetUser);
 router.get("/listguide", middleware.authentication, users.ListGuide);
 
 router.get("/guide", middleware.authentication, users.GetUser);
+router.patch("/modifyGuide/:id", middlewareGuide.authentication, users.modifyUserGuide);
 
 
 /* GET users listing. */
