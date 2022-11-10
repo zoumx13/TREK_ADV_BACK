@@ -1,4 +1,5 @@
 const parcoursSchema = require("../models/ParcoursSchema");
+const User = require("../models/usersModel")
 
 const reservations = {
     createReservations: async (req, res) => {
