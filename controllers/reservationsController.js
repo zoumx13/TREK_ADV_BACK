@@ -170,16 +170,20 @@ const reservations = {
     });
   },
   getResaById: (req, res) => {
+    let result = [];
     parcoursSchema.findById(req.params.idParcours, (err, data) => {
       if (err) {
         res.status(404).json({ message: "error getResaById", err });
         console.log("oups");
       } else {
+        result.push(data)
         console.log("parcours chargé", data);
         console.log("resa chargé", data.reservations);
         const array = data.reservations.map((item)=> {
             if(item._id==req.params.idResa){
                 console.log('OK');
+                result.push(item)
+                res.json(result)
             }else{
                 console.log('NOOOOOOOO')
             }
