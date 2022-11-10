@@ -152,11 +152,32 @@ const reservations = {
     },
 
     getAllReservations : async (req,res) => {
-        await parcoursSchema.find()
-           
-        .then((docs) => res.status(200).json(docs.reservations))
-        .catch((err) => res.status(400).json(err))
-      },
+        let userGuide
+        let resa=[]
+        User.findById(req.body.userId, async(err,user)=>{
+            if (user == null) {
+                res.status(404).json({ message: "invalid User" });
+                console.log('invalid user')
+            }else{
+                userGuide = JSON.stringify(user._id);
+                console.log('profil :',userGuide);
+            }
+        })
+        parcoursSchema.find({}, (err, data) => {
+            if (err) {
+              res.status(404).json({ message: "Echec" });
+              console.log("oups");
+            } else {
+                console.log("DATA ", data);
+                for (let i=0; i<data.length; i++){
+                    if(data[i].reservations.length!=0){
+                        resa.push(data[i].reservations)
+                    }
+                }
+            }
+            res.json(resa);
+        })
+    },
 
     addGuideReservations:  (req, res) => {
         const {
