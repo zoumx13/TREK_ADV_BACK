@@ -74,10 +74,9 @@ const reservations = {
       res.status(409).send(err);
     }
   },
-},
-  deleteReservations: async (req, res) => {
+  deleteReservations: (req, res) => {
     try {
-      await parcoursSchema
+      return parcoursSchema
         .findByIdAndUpdate(
           { _id: req.params.id },
 
@@ -226,7 +225,6 @@ const reservations = {
       }
     });    
   },
-
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;
 
@@ -260,9 +258,5 @@ const reservations = {
     }
   },
 };
-    }, 
-
-}
-
 
 module.exports = reservations;
