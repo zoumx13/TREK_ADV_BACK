@@ -153,16 +153,14 @@ const reservations = {
         res.status(404).json({ message: "Echec" });
         console.log("oups");
       } else {
-        // test = parcoursSchema.find( {
-        //     'reservations.idGuide': '6364d353f0c50314df3b26bf' })
-        // console.log("TEST ", test)
         for (let i = 0; i < data.length; i++) {
+            // resa.push({idparcours:data[i]._id,reservations:[]})
+            
             if (data[i].reservations.length != undefined && data[i].reservations.length != 0) {
                 for (let y = 0; y < data[i].reservations.length; y++) {
-                    console.log("userguide", userGuide)
-                    console.log("data[i].reservations[y].idGuide ",data[i].reservations[y])
                     if(data[i].reservations[y].idGuide == userGuide){
-                        resa.push(data[i].reservations[y]);
+                        // resa[i].reservations.push(data[i].reservations[y])
+                        resa.push({idparcours:data[i]._id, reservation:data[i].reservations[y]});
                     }
                 }
             }
@@ -171,30 +169,24 @@ const reservations = {
       res.json(resa);
     });
   },
-        // for (let i = 0; i < resa.length; i++) {
-        //     console.log(`resa[${i}]`, resa[i]);
-        //     array.push(resa[i]);
-        // }
-
-      //     for (let i = 0; i < data.length; i++) {
-      //       if (data[i].reservations.length != 0 ) {
-      //         console.log("HELLLLLLLLLLLLLLLLLO ", data[i].reservations)
-      //         resa.push(data[i].reservations)
-      //       }
-      //     }
-      //     resa.map((item) => console.log("ITEM", item[1]));
-      //   }
-      //     resa.map((item) => {
-      //       if (item != undefined) {
-      //         console.log("idguide ", item);
-      //         array.push(item);
-      //       }
-      //     });
-      //   }
-      // }
-      // console.log("RESA ", resa);
-      // console.log("ARRAY ", array);
- 
+  getResaById: (req, res) => {
+    parcoursSchema.findById(req.params.idParcours, (err, data) => {
+      if (err) {
+        res.status(404).json({ message: "error getResaById", err });
+        console.log("oups");
+      } else {
+        console.log("parcours chargé", data);
+        console.log("resa chargé", data.reservations);
+        const array = data.reservations.map((item)=> {
+            if(item._id==req.params.idResa){
+                console.log('OK');
+            }else{
+                console.log('NOOOOOOOO')
+            }
+        })
+      }
+    });    
+  },
 
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;

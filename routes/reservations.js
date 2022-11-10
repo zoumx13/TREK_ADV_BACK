@@ -11,6 +11,7 @@ router.get("/getReservations/:id", reservations.getReservationsByIdParcour)
 router.get("/getReservations", reservations.getAllReservations)
 router.patch("/addGuideReservations/:id", reservations.addGuideReservations)
 router.get("/getAllReservations", tokenMiddle.token , reservations.getAllReservations)
+router.get("/:idParcours/:idResa", reservations.getResaById);
 
 
 
