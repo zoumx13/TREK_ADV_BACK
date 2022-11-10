@@ -3,11 +3,15 @@ const router = express.Router();
 const reservations = require("../controllers/reservationsController");
 const tokenMiddle = require("../middleware/token");
 
-// Route Resa
-router.patch("/createReservations/:id", reservations.createReservations);
-// router.delete("/deletereservations", reservations.deleteReservations)
-// router.patch("/modifyReservations", reservations.modifyReservations)
-// router.get("/", reservations.getReservations)
+
+// Route Resa 
+router.patch("/createReservations/:id", reservations.createReservations)
+router.delete("/deleteReservations/:id", reservations.deleteReservations)
+router.patch("/modifyReservations/:id", reservations.modifyReservations)
+router.get("/getReservations/:id", reservations.getReservationsByIdParcour)
+router.get("/getReservations", reservations.getAllReservations)
+router.patch("/addGuideReservations/:id", reservations.addGuideReservations)
 router.post("/user", tokenMiddle.token, reservations.userReservation);
+
 
 module.exports = router;

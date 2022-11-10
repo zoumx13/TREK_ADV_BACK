@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs").promises;
 const path = require("path");
+const nodemailer = require("nodemailer");
+
 // const usersModel = require("../models/usersModel");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
@@ -242,5 +244,44 @@ const users = {
       //   req.userRole = "aucun";
     }
   },
+
+  ListGuide: async (req, res) => {
+    UserModel.find({role:"guide"}, function(err, users) {
+              var userSearch = [];
+              users.forEach(function(user) {
+                userSearch.push({id:user._id, nom:user.nom, prenom:user.prenom});
+              });
+              res.send(userSearch);
+            });
+  },
+
+  MailGuide: async (req, res) => {
+    const password = req.body.password
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+          user: 'liliane.grant25@ethereal.email',
+          pass: 'GcyumymqpsEPceAuHT'
+      }
+  });
+  console.log("pouet", password)
+  let info = await transporter.sendMail({
+    from: '"Trek Adventure" <trekadventure@example.com>', // sender address
+    to: req.body.mail, // list of receivers
+    subject: "Inscription Guide TA", // Subject line
+    text: "Bonjour, bienvenue sur le site Trek Adventure. Connectez vous avec le mot de passe ci-aprés : " + password, // plain text body
+    // html: "<b>Hello world?</b>", // html body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
+
+  
 };
 module.exports = users;

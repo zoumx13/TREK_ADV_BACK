@@ -1,5 +1,5 @@
-const ParcoursSchema = require("../models/ParcoursSchema");
 const parcoursSchema = require("../models/ParcoursSchema");
+
 
 const parcours = {
   createParcours: async (req, res) => {
@@ -8,13 +8,7 @@ const parcours = {
       dureeParcours,
       description,
       prix,
-      imgIllustration,
-      niveauDifficulte,
-      nomEtape,
-      numeroEtape,
-      localisation,
-      descriptionEtape,
-      imgIllustrationEtape,
+      niveauDifficulte
     } = req.body;
 
     const newParcours = new parcoursSchema({
@@ -22,21 +16,8 @@ const parcours = {
       dureeParcours: dureeParcours,
       description: description,
       prix: prix,
-
-      // ? = alors
-      // Ligne ci-dessous utilisable plus tard avec multer
-      //  imgIllustration: req.file !== null ? "./uploads/parcours/" + fileName : "",
       niveauDifficulte: niveauDifficulte,
-      // etape: [
-      //     {
-      //         nomEtape: nomEtape,
-      //         numeroEtape: numeroEtape,
-      //         localisation: localisation,
-      //             descriptionEtape: descriptionEtape,
-      //         // Ligne ci-dessous utilisable plus tard avec multer
-      //         //     imgIllustrationEtape: req.file !== null ? "./uploads/etapes/" + fileName : "",
-      //     },
-      // ],
+
     });
 
     try {
@@ -121,7 +102,7 @@ const parcours = {
         console.log("parcours chargés", data);
       }
     });
-    // }).select("nomParcours");
+    
   },
 
   addStep: (req, res) => {
@@ -172,6 +153,9 @@ const parcours = {
       return res.status(400).send(err);
     }
   },
+  modifyStep: (req, res) => {
+
+  },
   addImg: (req, res) => {
     if (req.file) {
       const name = req.file.filename;
@@ -183,7 +167,7 @@ const parcours = {
           imgIllustration: name,
         };
 
-        ParcoursSchema.findOneAndUpdate(filter, updateImage, (err) => {
+        parcoursSchema.findOneAndUpdate(filter, updateImage, (err) => {
           if (err) {
             res.status(500).json(err);
           } else {
