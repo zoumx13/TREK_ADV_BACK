@@ -1,5 +1,7 @@
 const parcoursSchema = require("../models/ParcoursSchema");
 const User = require("../models/usersModel");
+const ObjectID = require("mongoose").Types.ObjectId
+
 
 const reservations = {
   createReservations: async (req, res) => {
@@ -136,14 +138,13 @@ const reservations = {
   getAllReservations: async (req, res) => {
     let userGuide;
     let resa = [];
-    let array = [];
-    let test;
     User.findById(req.body.userId, async (err, user) => {
       if (user == null) {
         res.status(404).json({ message: "invalid User" });
         console.log("invalid user");
       } else {
-        userGuide = JSON.stringify(user._id);
+        userGuide = user._id;
+        // userGuide = userGuide.replace("''", )
         console.log("profil :", userGuide);
       }
     });
@@ -152,19 +153,28 @@ const reservations = {
         res.status(404).json({ message: "Echec" });
         console.log("oups");
       } else {
-        test = parcoursSchema.find( {
-            'reservations.idGuide': '6364d353f0c50314df3b26bf' })
+        // test = parcoursSchema.find( {
+        //     'reservations.idGuide': '6364d353f0c50314df3b26bf' })
         // console.log("TEST ", test)
-        // for (let i = 0; i < data.length; i++) {
-        //   if (data[i].reservations.length != 0) {
-        //     resa.push(data[i].reservations);
-        //   }
-        // }
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].reservations.length != undefined && data[i].reservations.length != 0) {
+                for (let y = 0; y < data[i].reservations.length; y++) {
+                    console.log("userguide", userGuide)
+                    console.log("data[i].reservations[y].idGuide ",data[i].reservations[y])
+                    if(data[i].reservations[y].idGuide == userGuide){
+                        resa.push(data[i].reservations[y]);
+                    }
+                }
+            }
+        }
+      }
+      res.json(resa);
+    });
+  },
         // for (let i = 0; i < resa.length; i++) {
         //     console.log(`resa[${i}]`, resa[i]);
         //     array.push(resa[i]);
         // }
-      }
 
       //     for (let i = 0; i < data.length; i++) {
       //       if (data[i].reservations.length != 0 ) {
@@ -184,9 +194,7 @@ const reservations = {
       // }
       // console.log("RESA ", resa);
       // console.log("ARRAY ", array);
-      res.json(array);
-    });
-  },
+ 
 
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;
