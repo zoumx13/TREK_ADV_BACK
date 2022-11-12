@@ -56,18 +56,19 @@ const reservations = {
         if (!theResa) {
           res.status(404).send("Resa not found");
         } else {
-          const resa = {
-            clientId: user,
+          theResa.clients.push({
+            idClient: user,
             date: Date(),
-          };
-          theResa.clients = resa;
-          docs.save((err) => {
-            if (!err) {
-              res.json({ message: "resa validée" });
-            } else {
-              res.status(500).send(err);
-            }
-          });
+          }),
+            // theResa.clients = resa;
+
+            docs.save((err) => {
+              if (!err) {
+                res.json({ message: "resa validée" });
+              } else {
+                res.status(500).send(err);
+              }
+            });
         }
       });
     } catch (err) {
@@ -188,17 +189,24 @@ const reservations = {
         console.log("oups");
       } else {
         for (let i = 0; i < data.length; i++) {
-            // resa.push({idparcours:data[i]._id,reservations:[]})
-            
-            if (data[i].reservations.length != undefined && data[i].reservations.length != 0) {
-                for (let y = 0; y < data[i].reservations.length; y++) {
-                    if(data[i].reservations[y].idGuide == userGuide){
-                        // resa[i].reservations.push(data[i].reservations[y])
-                        console.log("IMAGE :",data[i].imgIllustration);
-                        resa.push({idparcours:data[i]._id, imgIllustration:data[i].imgIllustration, reservation:data[i].reservations[y]});
-                    }
-                }
+          // resa.push({idparcours:data[i]._id,reservations:[]})
+
+          if (
+            data[i].reservations.length != undefined &&
+            data[i].reservations.length != 0
+          ) {
+            for (let y = 0; y < data[i].reservations.length; y++) {
+              if (data[i].reservations[y].idGuide == userGuide) {
+                // resa[i].reservations.push(data[i].reservations[y])
+                console.log("IMAGE :", data[i].imgIllustration);
+                resa.push({
+                  idparcours: data[i]._id,
+                  imgIllustration: data[i].imgIllustration,
+                  reservation: data[i].reservations[y],
+                });
+              }
             }
+          }
         }
       }
       res.json(resa);
@@ -211,20 +219,20 @@ const reservations = {
         res.status(404).json({ message: "error getResaById", err });
         console.log("oups");
       } else {
-        result.push(data)
+        result.push(data);
         console.log("parcours chargé", data);
         console.log("resa chargé", data.reservations);
-        const array = data.reservations.map((item)=> {
-            if(item._id==req.params.idResa){
-                console.log('OK');
-                result.push(item)
-                res.json(result)
-            }else{
-                console.log('NOOOOOOOO')
-            }
-        })
+        const array = data.reservations.map((item) => {
+          if (item._id == req.params.idResa) {
+            console.log("OK");
+            result.push(item);
+            res.json(result);
+          } else {
+            console.log("NOOOOOOOO");
+          }
+        });
       }
-    });    
+    });
   },
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;
