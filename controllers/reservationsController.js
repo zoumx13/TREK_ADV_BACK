@@ -189,18 +189,16 @@ const reservations = {
         console.log("oups");
       } else {
         for (let i = 0; i < data.length; i++) {
-          // resa.push({idparcours:data[i]._id,reservations:[]})
-
           if (
             data[i].reservations.length != undefined &&
             data[i].reservations.length != 0
           ) {
             for (let y = 0; y < data[i].reservations.length; y++) {
               if (data[i].reservations[y].idGuide == userGuide) {
-                // resa[i].reservations.push(data[i].reservations[y])
                 console.log("IMAGE :", data[i].imgIllustration);
                 resa.push({
                   idparcours: data[i]._id,
+                  nomParcours: data[i].nomParcours,
                   imgIllustration: data[i].imgIllustration,
                   reservation: data[i].reservations[y],
                 });
