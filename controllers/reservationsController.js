@@ -220,13 +220,14 @@ const reservations = {
         result.push(data);
         console.log("parcours chargé", data);
         console.log("resa chargé", data.reservations);
-        const array = data.reservations.map((item) => {
+        data.reservations.map((item) => {
           if (item._id == req.params.idResa) {
-            console.log("OK");
+            console.log("match id reservation");
             result.push(item);
+            result.push(item.clients)
             res.json(result);
           } else {
-            console.log("NOOOOOOOO");
+            console.log("no match id reservation");
           }
         });
       }
