@@ -305,15 +305,18 @@ const reservations = {
               parcours : reservations,
               reservation : reservations.reservations[i]
             })
-            if(reservations.reservations[i].idGuide!=undefined){
+            if(reservations.reservations[i].idGuide!=''){
               console.log("IDGUIDE ",reservations.reservations[i].idGuide, 2)
               User.findOne({ _id: reservations.reservations[i].idGuide }, (err, data) => {
                 if (err) {
                   res.status(404).json({ message: "Echec" });
                 } else {
-                  nextResa.push(data.nom);
+                  console.log("DATANOM" ,data.nom)
+                  nextResa.push([data.nom]);
                 }
               });
+            }else{
+              console.log("PAS DE GUIDE ENREGISTRE ",reservations.reservations[i].idGuide)
             }
           }
         }
