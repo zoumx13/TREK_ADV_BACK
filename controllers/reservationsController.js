@@ -224,14 +224,30 @@ const reservations = {
           if (item._id == req.params.idResa) {
             console.log("match id reservation");
             result.push(item);
-            result.push(item.clients)
-            res.json(result);
-          } else {
-            console.log("no match id reservation");
+            result.push(item.clients);
           }
         });
+        res.json(result)
       }
     });
+                // for (let z=0 ; z<item.clients.length; z++){
+            //   console.log("clieeeeeeeeeeeeeeeeeeents ",item.clients[z])
+            //   User.findById(item.clients[z].idClient, (err, donnes) => {
+            //     if (err) {
+            //       res.status(404).json({ message: "error clients", err });
+            //       console.log("oups");
+            //     } else {
+            //       console.log("clients ", donnes);
+            //       result.push({
+            //         nomClient: donnes.nom,
+            //         prenomClient : donnes.prenom,
+            //         descriptionClient : donnes.description,
+            //         photoClient: donnes.photo_profil,
+            //         placesReserves : 0,
+            //       });
+            //     }
+            //   })
+            // }
   },
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;

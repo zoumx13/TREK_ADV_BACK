@@ -80,9 +80,12 @@ const users = {
           message: "reléve réussi:",
           profil: {
             nom: data.nom,
+            prenom: data.prenom,
             identifiant: data.identifiant,
+            description : data.description,
             role: data.role,
             photo_profil: data.photo_profil,
+            annees_exp: data.annees_exp
           },
         });
       }
