@@ -288,7 +288,7 @@ const reservations = {
   nextReservation: async (req, res) => {
     const date = new Date();
     const newDate = date.toISOString().slice(0, 10);
-    let dateNextResa
+    let dateNextResa;
     let nextResa = [];
     parcoursSchema.find({}, (err, data) => {
       if (err) {
@@ -296,34 +296,33 @@ const reservations = {
       } else {
         data.map((reservations) => {
           // console.log("RESERVATION.RESA ", reservations.reservations)
-        for(let i=0 ; i<reservations.reservations.length; i++){
-          let searchDate = reservations.reservations[i].dateReservation
-          console.log("SEARCHDATE",searchDate)
-          if(searchDate > newDate && searchDate < dateNextResa || dateNextResa == undefined ){
-            dateNextResa = searchDate
-            nextResa.splice(0,1,{
-              parcours : reservations,
-              reservation : reservations.reservations[i]
-            })
-            if(reservations.reservations[i].idGuide!=undefined){
-              console.log("IDGUIDE ",reservations.reservations[i].idGuide, 2)
-              User.findOne({ _id: reservations.reservations[i].idGuide }, (err, data) => {
-                if (err) {
-                  res.status(404).json({ message: "Echec" });
-                } else {
-                  nextResa.push(data.nom);
-                }
+          for (let i = 0; i < reservations.reservations.length; i++) {
+            let searchDate = reservations.reservations[i].dateReservation;
+            console.log("SEARCHDATE", searchDate);
+            if (
+              (searchDate > newDate && searchDate < dateNextResa) ||
+              dateNextResa == undefined
+            ) {
+              dateNextResa = searchDate;
+              nextResa.splice(0, 1, {
+                parcours: reservations,
+                reservation: reservations.reservations[i],
               });
             }
           }
-        }
-        })
-        console.log("nextResa end ", nextResa)
-        res.json(nextResa)
+        });
+        User.findOne({ _id: nextResa[0].reservation.idGuide }, (err, data) => {
+          if (err) {
+            res.status(404).json({ message: "Echec" });
+          } else {
+            nextResa.push(data.nom);
+            console.log("nextResa end ", nextResa);
+            res.json(nextResa);
+          }
+        });
       }
-    })
-  }
-}
-
+    });
+  },
+};
 
 module.exports = reservations;
