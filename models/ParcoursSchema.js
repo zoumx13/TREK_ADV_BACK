@@ -21,24 +21,21 @@ const ClientDetail = new mongoose.Schema({
 const ReservationDetail = new mongoose.Schema({
   openResa: {
     type: Boolean,
-    required: true,
   },
 
   dateReservation: {
     type: String,
-    required: true,
   },
   idGuide: {
     type: String,
-    required: true,
   },
   maxClients: {
     type: String,
-    required: true,
   },
   clients: [
     {
       idClient: String,
+      identifiant: String,
       date: String,
       etapeCompletee: [
         {
@@ -56,11 +53,9 @@ const ReservationDetail = new mongoose.Schema({
 const EtapeDetail = new mongoose.Schema({
   nomEtape: {
     type: String,
-    required: true,
   },
   numeroEtape: {
     type: String,
-    required: true,
   },
   localisation: [
     {
@@ -81,19 +76,17 @@ const EtapeDetail = new mongoose.Schema({
 const Parcours = new mongoose.Schema({
   nomParcours: {
     type: String,
-    required: true,
+
     unique: true,
   },
   dureeParcours: {
     type: String,
-    required: true,
   },
   description: {
     type: String,
   },
   prix: {
     type: String,
-    required: true,
   },
   imgIllustration: {
     // Stockez l'image dans un dossier static. Type = String à cause du chemin
@@ -102,7 +95,6 @@ const Parcours = new mongoose.Schema({
   },
   niveauDifficulte: {
     type: Number,
-    required: true,
   },
 
   reservations: [ReservationDetail],

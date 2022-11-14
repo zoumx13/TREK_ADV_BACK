@@ -41,7 +41,8 @@ const reservations = {
   },
   userReservation: async (req, res) => {
     try {
-      const user = req.body.userId;
+      const user = req.user._id;
+      const identifiant = req.user.identifiant;
       const parcourId = req.body.parcoursId;
       const resaId = req.body.resaId;
       console.log(parcourId);
@@ -56,19 +57,33 @@ const reservations = {
         if (!theResa) {
           res.status(404).send("Resa not found");
         } else {
-          theResa.clients.push({
-            idClient: user,
-            date: Date(),
-          }),
-            // theResa.clients = resa;
-
-            docs.save((err) => {
-              if (!err) {
-                res.json({ message: "resa validée" });
-              } else {
-                res.status(500).send(err);
-              }
+          console.log(theResa.clients);
+          if (!theResa.clients.length <= 0) {
+            theResa.clients.push({
+              idClient: user,
+              identifiant: identifiant,
+              date: Date(),
             });
+            console.log("1");
+          } else {
+            const resa = {
+              idClient: user,
+              identifiant: identifiant,
+              date: Date(),
+            };
+
+            theResa.clients = resa;
+            console.log("2");
+          }
+          console.log(theResa);
+          docs.save((err) => {
+            if (!err) {
+              res.json({ message: "resa validée" });
+            } else {
+              res.status(500).send(err);
+              console.log(err);
+            }
+          });
         }
       });
     } catch (err) {
@@ -224,7 +239,7 @@ const reservations = {
           if (item._id == req.params.idResa) {
             console.log("match id reservation");
             result.push(item);
-            result.push(item.clients)
+            result.push(item.clients);
             res.json(result);
           } else {
             console.log("no match id reservation");
