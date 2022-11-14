@@ -237,7 +237,7 @@ const reservations = {
     const { idGuide, resaId } = req.body;
 
     try {
-      return ParcoursSchema.findById(
+      return parcoursSchema.findById(
         // trouve le Parcour grâce à son id du params
         req.params.id,
         // appel un callback, pour accéder à docs
