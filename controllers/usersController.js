@@ -249,12 +249,19 @@ const users = {
   },
 
   ListGuide: async (req, res) => {
-    UserModel.find({ role: "guide" }, function (err, users) {
-      var userSearch = [];
-      users.forEach(function (user) {
-        userSearch.push({ id: user._id, nom: user.nom, prenom: user.prenom });
-      });
-      res.send(userSearch);
+    console.log("ENTRE DE FONCTION TESEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST")
+    const userSearch = [];
+    UserModel.find({ role: "guide" }, (err, users) => {
+      if (err) {
+        console.log("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+        res.status(404).json({ message: "Echec" });
+      } else {
+        users.forEach(function (user) {
+          userSearch.push({ id: user._id, nom: user.nom, prenom: user.prenom });
+        })
+        console.log("USERSEARCH",userSearch)
+        res.json(userSearch);
+      }
     });
   },
 
