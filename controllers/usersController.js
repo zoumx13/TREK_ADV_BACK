@@ -84,6 +84,8 @@ const users = {
             identifiant: data.identifiant,
             role: data.role,
             photo_profil: data.photo_profil,
+            annees_exp: data.annees_exp,
+            description: data.description,
           },
         });
       }
