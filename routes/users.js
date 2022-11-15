@@ -17,7 +17,7 @@ router.post(
   users.updatePicture
 );
 
-router.get("/profilUser", tokenMiddle.token, users.GetProfilUser);
+router.get("/profilUser", tokenMiddle.checkToken, users.GetProfilUser);
 router.post("/createguide", middleware.authentication, users.CreateUser);
 router.post("/mailguide", middleware.authentication, users.MailGuide);
 router.post("/reservationuser", users.GetUser);
@@ -26,8 +26,11 @@ router.get("/user", tokenMiddle.token, users.GetUser);
 router.get("/listguide", middleware.authentication, users.ListGuide);
 
 router.get("/guide", middleware.authentication, users.GetUser);
-router.patch("/modifyGuide/:id", middlewareGuide.authentication, users.modifyUserGuide);
-
+router.patch(
+  "/modifyGuide/:id",
+  middlewareGuide.authentication,
+  users.modifyUserGuide
+);
 
 /* GET users listing. */
 router.post("/");

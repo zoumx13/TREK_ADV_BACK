@@ -7,6 +7,7 @@ const tokenMiddle = {
       /* Décryptage du token */
       jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY, (err, data) => {
         req.body.userId = data.userId;
+
         next();
       });
     }

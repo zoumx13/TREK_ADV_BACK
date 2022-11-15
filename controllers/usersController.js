@@ -109,23 +109,50 @@ const users = {
     });
   },
   ModifyProfilUser: async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.user._id;
     const filter = { _id: userId };
+    const password = req.body.password;
 
-    const updateUser = {
-      nom: req.body.nom,
-      prenom: req.body.prenom,
-      identifiant: req.body.identifiant,
-      description: req.body.description,
-    };
+    if (password) {
+      const saltRounds = 10;
 
-    UserModel.findOneAndUpdate(filter, updateUser, (err) => {
-      if (err) {
-        res.status(500).json({ message: "Echec" });
-      } else {
-        res.json({ message: "information mise a jour" });
-      }
-    });
+      bcrypt.hash(password, saltRounds, (err, hash) => {
+        if (err) {
+          res.status(505).json(err);
+        } else {
+          const updateUser = {
+            nom: req.body.nom,
+            prenom: req.body.prenom,
+            identifiant: req.body.identifiant,
+            description: req.body.description,
+            password: hash,
+          };
+
+          UserModel.findOneAndUpdate(filter, updateUser, (err) => {
+            if (err) {
+              res.status(500).json({ message: "Echec" });
+            } else {
+              res.json({ message: "information mise a jour" });
+            }
+          });
+        }
+      });
+    } else {
+      const updateUser = {
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        identifiant: req.body.identifiant,
+        description: req.body.description,
+      };
+
+      UserModel.findOneAndUpdate(filter, updateUser, (err) => {
+        if (err) {
+          res.status(500).json({ message: "Echec" });
+        } else {
+          res.json({ message: "information mise a jour" });
+        }
+      });
+    }
   },
   UpdateUserPicture: async (req, res) => {
     if (req.file) {
@@ -212,9 +239,9 @@ const users = {
     console.log("Bien connecté en Admin !");
   },
 
-  EditUser: async (req, res) => { },
+  EditUser: async (req, res) => {},
 
-  DeleteUser: async (req, res) => { },
+  DeleteUser: async (req, res) => {},
 
   CheckToken: async (req, res) => {
     const token = String(req.get("Authorization")).split(" ")[1];
@@ -256,16 +283,8 @@ const users = {
   },
 
   modifyUserGuide: async (req, res) => {
-
-    const {
-      identifiant,
-      password,
-      nom,
-      prenom,
-      annees_exp,
-      description,
-
-    } = req.body;
+    const { identifiant, password, nom, prenom, annees_exp, description } =
+      req.body;
 
     const updateData = {
       identifiant: identifiant,
@@ -274,7 +293,6 @@ const users = {
       prenom: prenom,
       annees_exp: annees_exp,
       description: description,
-
     };
 
     try {
@@ -282,42 +300,41 @@ const users = {
         req.params.id,
 
         { $set: updateData },
-        { new: true })
-      res.status(200).json(guideModified)
-
+        { new: true }
+      );
+      res.status(200).json(guideModified);
     } catch (err) {
-      res.status(400).json(err)
-    };
-
+      res.status(400).json(err);
+    }
   },
 
   MailGuide: async (req, res) => {
-    const password = req.body.password
+    const password = req.body.password;
     const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
+      host: "smtp.ethereal.email",
       port: 587,
       auth: {
-          user: 'liliane.grant25@ethereal.email',
-          pass: 'GcyumymqpsEPceAuHT'
-      }
-  });
-  console.log("pouet", password)
-  let info = await transporter.sendMail({
-    from: '"Trek Adventure" <trekadventure@example.com>', // sender address
-    to: req.body.mail, // list of receivers
-    subject: "Inscription Guide TA", // Subject line
-    text: "Bonjour, bienvenue sur le site Trek Adventure. Connectez vous avec le mot de passe ci-aprés : " + password, // plain text body
-    // html: "<b>Hello world?</b>", // html body
-  });
+        user: "liliane.grant25@ethereal.email",
+        pass: "GcyumymqpsEPceAuHT",
+      },
+    });
+    console.log("pouet", password);
+    let info = await transporter.sendMail({
+      from: '"Trek Adventure" <trekadventure@example.com>', // sender address
+      to: req.body.mail, // list of receivers
+      subject: "Inscription Guide TA", // Subject line
+      text:
+        "Bonjour, bienvenue sur le site Trek Adventure. Connectez vous avec le mot de passe ci-aprés : " +
+        password, // plain text body
+      // html: "<b>Hello world?</b>", // html body
+    });
 
-  console.log("Message sent: %s", info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-}
-
-  
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  },
 };
 module.exports = users;
