@@ -247,12 +247,30 @@ const reservations = {
         });
       }
     });
+                // for (let z=0 ; z<item.clients.length; z++){
+            //   console.log("clieeeeeeeeeeeeeeeeeeents ",item.clients[z])
+            //   User.findById(item.clients[z].idClient, (err, donnes) => {
+            //     if (err) {
+            //       res.status(404).json({ message: "error clients", err });
+            //       console.log("oups");
+            //     } else {
+            //       console.log("clients ", donnes);
+            //       result.push({
+            //         nomClient: donnes.nom,
+            //         prenomClient : donnes.prenom,
+            //         descriptionClient : donnes.description,
+            //         photoClient: donnes.photo_profil,
+            //         placesReserves : 0,
+            //       });
+            //     }
+            //   })
+            // }
   },
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;
 
     try {
-      return ParcoursSchema.findById(
+      return parcoursSchema.findById(
         // trouve le Parcour grâce à son id du params
         req.params.id,
         // appel un callback, pour accéder à docs
