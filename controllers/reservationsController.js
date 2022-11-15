@@ -247,25 +247,25 @@ const reservations = {
         });
       }
     });
-                // for (let z=0 ; z<item.clients.length; z++){
-            //   console.log("clieeeeeeeeeeeeeeeeeeents ",item.clients[z])
-            //   User.findById(item.clients[z].idClient, (err, donnes) => {
-            //     if (err) {
-            //       res.status(404).json({ message: "error clients", err });
-            //       console.log("oups");
-            //     } else {
-            //       console.log("clients ", donnes);
-            //       result.push({
-            //         nomClient: donnes.nom,
-            //         prenomClient : donnes.prenom,
-            //         descriptionClient : donnes.description,
-            //         photoClient: donnes.photo_profil,
-            //         placesReserves : 0,
-            //       });
-            //     }
-            //   })
-            // }
-  },
+     },
+    // for (let z=0 ; z<item.clients.length; z++){
+    //   console.log("clieeeeeeeeeeeeeeeeeeents ",item.clients[z])
+    //   User.findById(item.clients[z].idClient, (err, donnes) => {
+    //     if (err) {
+    //       res.status(404).json({ message: "error clients", err });
+    //       console.log("oups");
+    //     } else {
+    //       console.log("clients ", donnes);
+    //       result.push({
+    //         nomClient: donnes.nom,
+    //         prenomClient : donnes.prenom,
+    //         descriptionClient : donnes.description,
+    //         photoClient: donnes.photo_profil,
+    //         placesReserves : 0,
+    //       });
+    //     }
+    //   })
+    // }
   addGuideReservations: (req, res) => {
     const { idGuide, resaId } = req.body;
 
@@ -283,12 +283,16 @@ const reservations = {
           if (!theResa) {
             return res.status(404).send("Resa not found");
           } else {
+            console.log("THE RESAAAA CHARGEE");
+            console.log("THE RESAAAA", theResa);
+            console.log("NO THE RESAAAA");
             theResa.idGuide = idGuide;
             return docs.save((err) => {
+              console.log("DOOOOCS", docs.theResa);
               if (!err) {
                 return res.status(200).send(docs);
               } else {
-                return res.status(500).send(err);
+                return res.status(501).send(err);
               }
             });
           }
@@ -298,6 +302,48 @@ const reservations = {
       return res.status(409).send(err);
     }
   },
-};
+  nextReservation: async (req, res) => {
+    const date = new Date();
+    const newDate = date.toISOString().slice(0, 10);
+    let dateNextResa
+    let nextResa = [];
+    parcoursSchema.find({}, (err, data) => {
+      if (err) {
+        res.status(404).json({ message: "erreur" });
+      } else {
+        data.map((reservations) => {
+          // console.log("RESERVATION.RESA ", reservations.reservations)
+        for(let i=0 ; i<reservations.reservations.length; i++){
+          let searchDate = reservations.reservations[i].dateReservation
+          console.log("SEARCHDATE",searchDate)
+          if(searchDate > newDate && searchDate < dateNextResa || dateNextResa == undefined ){
+            dateNextResa = searchDate
+            nextResa.splice(0,1,{
+              parcours : reservations,
+              reservation : reservations.reservations[i]
+            })
+            if(reservations.reservations[i].idGuide!=''){
+              console.log("IDGUIDE ",reservations.reservations[i].idGuide, 2)
+              User.findOne({ _id: reservations.reservations[i].idGuide }, (err, data) => {
+                if (err) {
+                  res.status(404).json({ message: "Echec" });
+                } else {
+                  console.log("DATANOM" ,data.nom)
+                  nextResa.push([data.nom]);
+                }
+              });
+            }else{
+              console.log("PAS DE GUIDE ENREGISTRE ",reservations.reservations[i].idGuide)
+            }
+          }
+        }
+        })
+        console.log("nextResa end ", nextResa)
+        res.json(nextResa)
+      }
+    })
+  }
+}
+
 
 module.exports = reservations;

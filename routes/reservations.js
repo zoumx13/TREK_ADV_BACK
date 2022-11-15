@@ -16,6 +16,8 @@ router.get(
   reservations.getAllReservations
 );
 router.get("/:idParcours/:idResa", reservations.getResaById);
+router.get("/nextReservation", tokenMiddle.token, reservations.nextReservation);
 router.post("/user", tokenMiddle.checkToken, reservations.userReservation);
+
 
 module.exports = router;
