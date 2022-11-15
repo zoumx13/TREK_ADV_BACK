@@ -319,7 +319,18 @@ const users = {
   // Preview only available when sending through an Ethereal account
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-}
+},
+
+deleteGuide: (req, res) => {
+  UserModel.findByIdAndRemove({ _id: req.params.id }, (err, data) => {
+    if (err) {
+      res.status(404).json({ message: "error", err });
+    } else {
+      console.log("Guide supprimé", data);
+      res.status(200).json({ message: "data", data });
+    }
+  });
+},
 
   
 };
