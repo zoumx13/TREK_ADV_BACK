@@ -9,7 +9,11 @@ const upload = multer({ dest: "client/public/uploads/users" });
 
 router.post("/signup", users.CreateUser);
 router.post("/signin", users.SignIn);
-router.post("/modifyProfilUser", tokenMiddle.token, users.ModifyProfilUser);
+router.post(
+  "/modifyProfilUser",
+  tokenMiddle.checkToken,
+  users.ModifyProfilUser
+);
 router.post(
   "/pictureUser",
   tokenMiddle.checkToken,
