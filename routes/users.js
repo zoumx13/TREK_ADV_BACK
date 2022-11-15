@@ -17,7 +17,7 @@ router.post(
   users.updatePicture
 );
 
-router.get("/profilUser", tokenMiddle.checkToken, users.GetProfilUser);
+router.get("/profilUser", tokenMiddle.token, users.GetProfilUser);
 router.post("/createguide", middleware.authentication, users.CreateUser);
 router.post("/mailguide", middleware.authentication, users.MailGuide);
 router.post("/reservationuser", users.GetUser);
