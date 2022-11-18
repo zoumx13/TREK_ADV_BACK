@@ -28,6 +28,32 @@ const parcours = {
     }
   },
 
+  addImgParcours: (req, res) => {
+    if (req.file) {
+      const name = req.file.filename;
+      const id = String(req.get("Authorization")).split(" ")[1];
+      if (id) {
+        const filter = { _id: id };
+
+        const updateImage = {
+          imgIllustration: name,
+        };
+
+        parcoursSchema.findOneAndUpdate(filter, updateImage, (err) => {
+          if (err) {
+            res.status(500).json(err);
+          } else {
+            res.json({ message: name });
+          }
+        });
+      } else {
+        res.json({ message: "Echec" });
+      }
+    } else {
+      res.json({ message: "Echec" });
+    }
+  },
+
   deleteParcours: (req, res) => {
     parcoursSchema.findByIdAndRemove({ _id: req.params.id }, (err, data) => {
       if (err) {
@@ -138,41 +164,16 @@ const parcours = {
     );
   },
 
-  deleteStep: (req, res) => {
-    try {
-      return parcoursSchema
-        .findByIdAndUpdate(
-          req.params.id,
-          {
-            $pull: {
-              etape: {
-                _id: req.body.stepId,
-              },
-            },
-          },
-          { new: true }
-        )
-        .then((docs) => res.send(docs))
-        .catch((err) => res.status(400).send(err));
-    } catch (err) {
-      return res.status(400).send(err);
-    }
-  },
-  modifyStep: (req, res) => {
-
-  },
-  addImg: (req, res) => {
+  addImgStep: (req, res) => {
     if (req.file) {
       const name = req.file.filename;
-      const id = String(req.get("Authorization")).split(" ")[1];
-      if (id) {
-        const filter = { _id: id };
-
+      const idParcours = req.params.id;
+      const idStep = req.params.idStep;
+      if (idParcours) {
         const updateImage = {
           imgIllustration: name,
         };
-
-        parcoursSchema.findOneAndUpdate(filter, updateImage, (err) => {
+        parcoursSchema.findOneAndUpdate({ _id : idParcours , "etape._id" : idStep}, updateImage, (err) => {
           if (err) {
             res.status(500).json(err);
           } else {
@@ -186,6 +187,52 @@ const parcours = {
       res.json({ message: "Echec" });
     }
   },
+
+  deleteStep:(req,res)=>{
+    try{
+      parcoursSchema.findByIdAndUpdate({ _id : req.params.id},{
+        $pull: {
+          etape: {
+            _id: req.params.idStep,
+          },
+        },
+      },
+      { new: true },
+      )
+      .then((docs) => res.send(docs))
+      .catch((err) => res.status(400).send(err));
+    }
+    catch (err) {
+      return res.status(400).send(err)
+    }
+  },
+
+  modifyStep: (req, res) => {
+      const nomEtape = req.body.nomEtape;
+      const numeroEtape = req.body.numeroEtape;
+      const lat = req.body.lat;
+      const long = req.body.long;
+      const descriptionEtape = req.body.descriptionEtape;
+    try{
+     parcoursSchema.findOneAndUpdate({ _id : req.params.id , "etape._id" : req.params.idStep},{
+        $set:{
+          "etape.$.nomEtape" : nomEtape,
+          "etape.$.numeroEtape" : numeroEtape,
+          "etape.$.localisation[0].lat" : lat,
+          "etape.$.localisation[0].long" : long,
+          "etape.$.descriptionEtape" : descriptionEtape,
+        }
+      },
+      { new: true },
+      )
+      .then((docs) => res.json({message : "étape modifiée", docs}))
+      .catch((err) => res.status(400).send(err));
+    }
+    catch (err) {
+      return res.status(400).send(err)
+    }   
+  },
+
 };
 
 module.exports = parcours;

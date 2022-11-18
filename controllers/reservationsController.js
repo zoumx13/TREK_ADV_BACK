@@ -264,13 +264,9 @@ const reservations = {
 
           if (!theResa) {
             return res.status(404).send("Resa not found");
-          } else {
-            console.log("THE RESAAAA CHARGEE");
-            console.log("THE RESAAAA", theResa);
-            console.log("NO THE RESAAAA");
+          } else {;
             theResa.idGuide = idGuide;
-            return docs.save((err) => {
-              console.log("DOOOOCS", docs.theResa);
+            return docs.save((err) => { 
               if (!err) {
                 return res.status(200).send(docs);
               } else {
