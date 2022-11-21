@@ -2,7 +2,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var test = "test";
 const cors = require("cors");
 // const middlewareLogIn = require("./middleware/")
 // let cors = require("cors")

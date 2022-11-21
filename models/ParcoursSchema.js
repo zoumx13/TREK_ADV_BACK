@@ -69,7 +69,7 @@ const EtapeDetail = new mongoose.Schema({
   imgIllustrationEtape: {
     // Stockez l'image dans un dossier static. Type = String à cause du chemin
     type: String,
-    default: "./uploads/etapes/img_etapes.png",
+    default: "img_etapes.png",
   },
 });
 

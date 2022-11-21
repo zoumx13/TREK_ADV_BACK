@@ -276,17 +276,14 @@ const users = {
   },
 
   ListGuide: async (req, res) => {
-    console.log("ENTRE DE FONCTION TESEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST")
     const userSearch = [];
     UserModel.find({ role: "guide" }, (err, users) => {
       if (err) {
-        console.log("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
         res.status(404).json({ message: "Echec" });
       } else {
         users.forEach(function (user) {
-          userSearch.push({ id: user._id, nom: user.nom, prenom: user.prenom });
+          userSearch.push({ id: user._id, nom: user.nom, prenom: user.prenom, description: user.description, annees_exp: user.annees_exp, identifiant: user.identifiant });
         })
-        console.log("USERSEARCH",userSearch)
         res.json(userSearch);
       }
     });
