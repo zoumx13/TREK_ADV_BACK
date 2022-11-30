@@ -5,9 +5,9 @@ const fs = require("fs").promises;
 const path = require("path");
 const nodemailer = require("nodemailer");
 
-// const usersModel = require("../models/usersModel");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const users = {
+  // INSCRIPTION USER & CREATION GUIDE
   CreateUser: async (req, res) => {
     const password = req.body.password;
     const saltRounds = 10;
@@ -23,17 +23,19 @@ const users = {
           prenom: req.body.prenom,
           annees_exp: req.body.annees_exp,
           photo_profil: "defaultprofil.jpg",
+          dateInscription: Date()
         });
-        newUser.save((err) => {
+        newUser.save((err, data) => {
           if (err) {
             res.status(500).json({ message: "Impossible de s'enregistrer" });
           } else {
-            res.status(200).json({ message: "Utilisateur enregistré " });
+            res.status(200).json(data);
           }
         });
       }
     });
   },
+  //CONNEXION
   SignIn: async (req, res) => {
     const identifiant = req.body.identifiant;
     const password = req.body.password;
@@ -69,6 +71,7 @@ const users = {
       }
     });
   },
+  // CONTEXT USER
   GetUser: async (req, res) => {
     const userId = req.body.userId;
     const filter = { _id: userId };
@@ -86,7 +89,7 @@ const users = {
             photo_profil: data.photo_profil,
             annees_exp: data.annees_exp,
             description: data.description,
-          },
+          }
         });
       }
     });
@@ -238,42 +241,38 @@ const users = {
       res.status(500).json({ message: err });
     }
   },
+  updateImgUser: async (req, res) => {
+    if (req.file) {
+      const name = req.file.filename;
+      const id = req.params.idGuide;
+      if (id) {
+        const filter = { _id: id };
+
+        const updateImage = {
+          photo_profil: name,
+        };
+
+        UserModel.findOneAndUpdate(filter, updateImage, (err) => {
+          if (err) {
+            res.status(500).json(err);
+          } else {
+            res.json({ message: name });
+          }
+        });
+      } else {
+        res.json({ message: "Echec 1" });
+      }
+    } else {
+      res.json({ message: "Echec 2" });
+    }
+  },
   Admin: async (req, res) => {
     console.log("Bien connecté en Admin !");
   },
 
-  EditUser: async (req, res) => {},
+  // EditUser: async (req, res) => {},
 
-  DeleteUser: async (req, res) => {},
-
-  CheckToken: async (req, res) => {
-    const token = String(req.get("Authorization")).split(" ")[1];
-    console.log("entrer controller");
-    if (token) {
-      jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY, (err, data) => {
-        if (err) {
-          console.log("retour JSON");
-          res.json({ identifiant: "Invité", userRole: "aucun" });
-          // req.identifiant = "Invité",
-          //   req.userRole = "aucun";
-        } else {
-          res.json({
-            identifiant: data.identifiant,
-            userRole: data.userRole,
-            id: data.userId,
-          });
-          // req.user = data.userId;
-          // req.identifiant = data.identifiant,
-          //   req.userRole = data.userRole;
-        }
-      });
-    } else {
-      console.log("retour JSON");
-      res.json({ identifiant: "Invité", userRole: "aucun" });
-      // req.identifiant = "Invité",
-      //   req.userRole = "aucun";
-    }
-  },
+  // DeleteUser: async (req, res) => {},
 
   ListGuide: async (req, res) => {
     const userSearch = [];
@@ -282,13 +281,21 @@ const users = {
         res.status(404).json({ message: "Echec" });
       } else {
         users.forEach(function (user) {
-          userSearch.push({ id: user._id, nom: user.nom, prenom: user.prenom, description: user.description, annees_exp: user.annees_exp, identifiant: user.identifiant });
-        })
+          userSearch.push({
+            id: user._id,
+            nom: user.nom,
+            prenom: user.prenom,
+            description: user.description,
+            annees_exp: user.annees_exp,
+            identifiant: user.identifiant,
+            photo_profil: user.photo_profil,
+          });
+        });
         res.json(userSearch);
       }
     });
   },
-
+  //MODIFIER GUIDE ADMIN/GUIDE
   modifyUserGuide: async (req, res) => {
     const { identifiant, password, nom, prenom, annees_exp, description } =
       req.body;
@@ -304,7 +311,7 @@ const users = {
 
     try {
       const guideModified = await UserModel.findByIdAndUpdate(
-        req.params.id,
+        req.params.idGuide,
 
         { $set: updateData },
         { new: true }
@@ -314,7 +321,18 @@ const users = {
       res.status(400).json(err);
     }
   },
-
+  //SUPPRIMER GUIDE ADMIN
+  deleteGuide: (req, res) => {
+    UserModel.findByIdAndRemove({ _id: req.params.id }, (err, data) => {
+      if (err) {
+        res.status(404).json({ message: "error", err });
+      } else {
+        console.log("Guide supprimé", data);
+        res.status(200).json({ message: "data", data });
+      }
+    });
+  },
+  //CREATION MAIL GUIDE
   MailGuide: async (req, res) => {
     const password = req.body.password;
     const transporter = nodemailer.createTransport({
@@ -342,17 +360,8 @@ const users = {
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    res.status(200).json({message : "mail password sent"})
   },
 
-  deleteGuide: (req, res) => {
-    UserModel.findByIdAndRemove({ _id: req.params.id }, (err, data) => {
-      if (err) {
-        res.status(404).json({ message: "error", err });
-      } else {
-        console.log("Guide supprimé", data);
-        res.status(200).json({ message: "data", data });
-      }
-    });
-  },
 };
 module.exports = users;

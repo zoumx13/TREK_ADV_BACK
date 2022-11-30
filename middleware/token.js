@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/usersModel");
+
 const tokenMiddle = {
   token: (req, res, next) => {
     const token = String(req.get("Authorization")).split(" ")[1];
@@ -23,7 +24,7 @@ const tokenMiddle = {
 
     try {
       // Vérification du token
-      const data = await jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY);
+      const data = jwt.verify(token, process.env.DB_TOKEN_SECRET_KEY);
 
       // Récupération de l'utilisateur
       const user = await UserModel.findOne({ _id: data.userId });

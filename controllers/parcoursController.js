@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 
 
 const parcours = {
+  //CREER UN PARCOURS ADMIN
   createParcours: async (req, res) => {
     const { nomParcours, dureeParcours, description, prix, niveauDifficulte } =
       req.body;
@@ -22,11 +23,11 @@ const parcours = {
       return res.status(404).json(err);
     }
   },
-
+  //AJOUT IMAGE PARCOURS ADMIN
   addImgParcours: (req, res) => {
     if (req.file) {
       const name = req.file.filename;
-      const id = String(req.get("Authorization")).split(" ")[1];
+      const id = req.params.id
       if (id) {
         const filter = { _id: id };
 
@@ -48,18 +49,17 @@ const parcours = {
       res.json({ message: "Echec" });
     }
   },
-
+  //SUPPRIMER PARCOURS ADMIN
   deleteParcours: (req, res) => {
     parcoursSchema.findByIdAndRemove({ _id: req.params.id }, (err, data) => {
       if (err) {
         res.status(404).json({ message: "error", err });
       } else {
-        console.log("parcours supprimé", data);
         res.status(200).json({ message: "data", data });
       }
     });
   },
-
+  //MODIFIER PARCOURS ADMIN
   modifyParcours: (req,res) => {
     const nomParcours = req.body.nomParcours;
     const dureeParcours = req.body.dureeParcours;
@@ -92,7 +92,6 @@ const parcours = {
     parcoursSchema.find({}, (err, data) => {
       if (err) {
         res.status(404).json({ message: "Echec" });
-        console.log("oups");
       } else {
         res.json(data);
         console.log("parcours chargés", data);
@@ -104,14 +103,14 @@ const parcours = {
     parcoursSchema.findById(req.params.id, (err, data) => {
       if (err) {
         res.status(404).json({ message: "error getParcoursById", err });
-        console.log("oups");
       } else {
         res.json(data);
         console.log("parcours chargés", data);
       }
     });
   },
-
+  
+  //CREER ETAPE ADMIN
   addStep: async (req, res) => {
     try {
       const idStep = new mongoose.Types.ObjectId();
@@ -147,7 +146,7 @@ const parcours = {
       return res.status(400).send(err);
     }
   },
-
+  //AJOUT IMAGE ETAPE ADIMN
   addImgStep: (req, res) => {
     if (req.file) {
       const name = req.file.filename;
@@ -171,28 +170,7 @@ const parcours = {
       }
     }
   },
-
-  deleteStep: (req, res) => {
-    try {
-      parcoursSchema
-        .findByIdAndUpdate(
-          { _id: req.params.id },
-          {
-            $pull: {
-              etape: {
-                _id: req.params.idStep,
-              },
-            },
-          },
-          { new: true }
-        )
-        .then((docs) => res.send(docs))
-        .catch((err) => res.status(400).send(err));
-    } catch (err) {
-      return res.status(400).send(err);
-    }
-  },
-
+  //MODIFIER ETAPE ADMIN
   modifyStep: (req, res) => {
     const nomEtape = req.body.nomEtape;
     const numeroEtape = req.body.numeroEtape;
@@ -220,7 +198,27 @@ const parcours = {
       return res.status(400).send(err);
     }
   },
-
+  //SUPPRIMER ETAPE ADMIN
+  deleteStep: (req, res) => {
+    try {
+      parcoursSchema
+        .findByIdAndUpdate(
+          { _id: req.params.id },
+          {
+            $pull: {
+              etape: {
+                _id: req.params.idStep,
+              },
+            },
+          },
+          { new: true }
+        )
+        .then((docs) => res.send(docs))
+        .catch((err) => res.status(400).send(err));
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  },
 };
 
 module.exports = parcours;

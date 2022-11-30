@@ -4,26 +4,54 @@ const parcours = require("../controllers/parcoursController");
 const multer = require("multer");
 const uploadParcours = multer({ dest: "client/public/uploads/parcours" });
 const uploadStep = multer({ dest: "client/public/uploads/etapes" });
+const tokenMiddle = require("../middleware/token");
 
 // Route Parcours
-router.post("/createParcours", parcours.createParcours);
-router.delete("/deleteParcours/:id", parcours.deleteParcours);
-router.patch("/modifyParcours/:id", parcours.modifyParcours);
-router.get("/", parcours.getParcours);
-router.get("/:id", parcours.getParcoursById);
+//CREER PARCOURS ADMIN
+router.post("/createParcours", tokenMiddle.checkToken, parcours.createParcours);
+//AJOUT IMAGE PARCOURS ADMIN
 router.post(
   "/createImageParcours/:id",
   uploadParcours.single("file"),
   parcours.addImgParcours
 );
+//MODIFIER PARCOURS ADMIN
+router.patch(
+  "/modifyParcours/:id",
+  tokenMiddle.checkToken,
+  parcours.modifyParcours
+);
+//SUPPRIMER ETAPE ADMIN
+router.delete(
+  "/deleteParcours/:id",
+  tokenMiddle.checkToken,
+  parcours.deleteParcours
+);
+
 // Route Etape
-router.patch("/addStep/:id", parcours.addStep);
-router.delete("/deleteStep/:id/:idStep", parcours.deleteStep);
-router.post("/modifyStep/:id/:idStep", parcours.modifyStep);
+//AJOUT ETAPE ADMIN
+router.patch("/addStep/:id", tokenMiddle.checkToken, parcours.addStep);
+//AJOUT IMAGE ETAPE ADMIN
 router.post(
   "/createImageStep/:id/:idStep",
   uploadStep.single("file"),
   parcours.addImgStep
 );
+//MODIFIER ETAPE ADMIN
+router.post(
+  "/modifyStep/:id/:idStep",
+  tokenMiddle.checkToken,
+  parcours.modifyStep
+);
+//SUPPRIMER ETAPE ADMIN
+router.delete(
+  "/deleteStep/:id/:idStep",
+  tokenMiddle.checkToken,
+  parcours.deleteStep
+);
+
+router.get("/", tokenMiddle.checkToken, parcours.getParcours);
+router.get("/:id", tokenMiddle.checkToken, parcours.getParcoursById);
+
 
 module.exports = router;
