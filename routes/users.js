@@ -7,46 +7,61 @@ const tokenMiddle = require("../middleware/token");
 const multer = require("multer");
 const upload = multer({ dest: "client/public/uploads/users" });
 
+
+//CONTEXT USER
+router.get("/user", tokenMiddle.token, users.GetUser);
+
+//CREER CLIENT
 router.post("/signup", users.CreateUser);
-router.post("/signin", users.SignIn);
-router.post(
-  "/modifyProfilUser",
-  tokenMiddle.checkToken,
-  users.ModifyProfilUser
-);
+//AJOUT IMAGE CLIENT
 router.post(
   "/pictureUser",
   tokenMiddle.checkToken,
   upload.single("file"),
   users.updatePicture
 );
+//CONNEXION CLIENT
+router.post("/signin", users.SignIn);
+//MODIFIER CLIENT
+router.post(
+  "/modifyProfilUser",
+  tokenMiddle.checkToken,
+  users.ModifyProfilUser
+);
 
-router.get("/profilUser", tokenMiddle.token, users.GetProfilUser);
+//CREER GUIDE
 router.post("/createguide", middleware.authentication, users.CreateUser);
+//AJOUT IMAGE GUIDE
+router.post(
+  "/imgUser/:idGuide",
+  tokenMiddle.checkToken,
+  upload.single("file"),
+  users.updateImgUser
+);
+//MAIL PASSWORD GUIDE
 router.post("/mailguide", middleware.authentication, users.MailGuide);
-router.post("/reservationuser", users.GetUser);
-router.post("/loaddetailsguide", users.GetUser);
-router.get("/admin", middleware.authentication, users.Admin);
-router.get("/user", tokenMiddle.token, users.GetUser);
-router.get("/listguide", middleware.authentication, users.ListGuide);
-
-router.get("/guide", middleware.authentication, users.GetUser);
+//MODIFIER GUIDE
 router.patch(
-  "/modifyGuide/:id",
-  middlewareGuide.authentication,
+  "/modifyGuideadmin/:idGuide",
+  tokenMiddle.checkToken,
   users.modifyUserGuide
 );
-router.patch(
-  "/modifyGuideadmin/:id",
-  middleware.authentication,
-  users.modifyUserGuide
-);
+//SUPPRIMER GUIDE
 router.delete(
   "/deleteGuideadmin/:id",
-  middleware.authentication,
+  tokenMiddle.checkToken,
   users.deleteGuide
 );
 
-/* GET users listing. */
-router.post("/");
+
+router.get("/profilUser", tokenMiddle.token, users.GetProfilUser);
+router.post("/reservationuser", tokenMiddle.checkToken, middleware.authentication, users.GetUser);
+router.post("/loaddetailsguide", tokenMiddle.checkToken, users.GetUser);
+router.get("/admin", tokenMiddle.checkToken, users.Admin);
+// EXTRACTION LISTE GUIDE
+router.get("/listguide", tokenMiddle.checkToken, users.ListGuide);
+
+
+// /* GET users listing. */
+// router.post("/");
 module.exports = router;
