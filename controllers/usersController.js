@@ -178,9 +178,7 @@ const users = {
               res.status(404).json({ message: "Echec" });
             } else {
               if (data.photo_profil) {
-                console.log(data.photo_profil);
                 const defaultprofil = "defaultprofil.jpg";
-                console.log(defaultprofil);
                 if (data.photo_profil != defaultprofil) {
                   const lastProfilPicture = data.photo_profil;
                   const path =
@@ -188,9 +186,9 @@ const users = {
                     lastProfilPicture;
                   fs.unlink(path, (err) => {
                     if (err) {
-                      console.log(err);
+                      res.staus(400).json(err)
                     } else {
-                      console.log("\nDeleted file:" + lastProfilPicture);
+                      res.status(200)
                     }
                   });
                 }
@@ -273,28 +271,37 @@ const users = {
   // EditUser: async (req, res) => {},
 
   // DeleteUser: async (req, res) => {},
-
-  ListGuide: async (req, res) => {
-    const userSearch = [];
-    UserModel.find({ role: "guide" }, (err, users) => {
-      if (err) {
+  //GET ALL USERS
+  AllUsers: async (req,res) => {
+    UserModel.find({},(err, data)=>{
+      if(err){
         res.status(404).json({ message: "Echec" });
-      } else {
-        users.forEach(function (user) {
-          userSearch.push({
-            id: user._id,
-            nom: user.nom,
-            prenom: user.prenom,
-            description: user.description,
-            annees_exp: user.annees_exp,
-            identifiant: user.identifiant,
-            photo_profil: user.photo_profil,
-          });
-        });
-        res.json(userSearch);
+      }else{
+        res.json(data);
       }
-    });
+    })
   },
+  // ListGuide: async (req, res) => {
+  //   const userSearch = [];
+  //   UserModel.find({ role: "guide" }, (err, users) => {
+  //     if (err) {
+  //       res.status(404).json({ message: "Echec" });
+  //     } else {
+  //       users.forEach(function (user) {
+  //         userSearch.push({
+  //           id: user._id,
+  //           nom: user.nom,
+  //           prenom: user.prenom,
+  //           description: user.description,
+  //           annees_exp: user.annees_exp,
+  //           identifiant: user.identifiant,
+  //           photo_profil: user.photo_profil,
+  //         });
+  //       });
+  //       res.json(userSearch);
+  //     }
+  //   });
+  // },
   //MODIFIER GUIDE ADMIN/GUIDE
   modifyUserGuide: async (req, res) => {
     const { identifiant, password, nom, prenom, annees_exp, description } =
@@ -327,7 +334,6 @@ const users = {
       if (err) {
         res.status(404).json({ message: "error", err });
       } else {
-        console.log("Guide supprimé", data);
         res.status(200).json({ message: "data", data });
       }
     });
@@ -343,7 +349,6 @@ const users = {
         pass: "GcyumymqpsEPceAuHT",
       },
     });
-    console.log("pouet", password);
     let info = await transporter.sendMail({
       from: '"Trek Adventure" <trekadventure@example.com>', // sender address
       to: req.body.mail, // list of receivers

@@ -10,8 +10,6 @@ router.patch("/createReservations/:id", reservations.createReservations);
 router.patch("/modifyReservations/:idParcours/:idResa", reservations.modifyReservations);
 //SUPPRIMER RESERVATION 
 router.delete("/deleteReservations/:id", reservations.deleteReservations);
-//AJOUTER GUIDE A LA RESERVATION
-router.patch("/addGuideReservations/:id", reservations.addGuideReservations);
 
 
 //AFFICHER TOUTES LES RESERVATIONS CALENDRIER ADMIN

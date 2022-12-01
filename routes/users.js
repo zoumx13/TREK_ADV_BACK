@@ -58,8 +58,9 @@ router.get("/profilUser", tokenMiddle.token, users.GetProfilUser);
 router.post("/reservationuser", tokenMiddle.checkToken, middleware.authentication, users.GetUser);
 router.post("/loaddetailsguide", tokenMiddle.checkToken, users.GetUser);
 router.get("/admin", tokenMiddle.checkToken, users.Admin);
-// EXTRACTION LISTE GUIDE
-router.get("/listguide", tokenMiddle.checkToken, users.ListGuide);
+// EXTRACTION USERS
+// router.get("/listguide", tokenMiddle.checkToken, users.ListGuide);
+router.get("/allUsers", tokenMiddle.checkToken, users.AllUsers);
 
 
 // /* GET users listing. */

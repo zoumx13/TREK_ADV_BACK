@@ -94,7 +94,6 @@ const parcours = {
         res.status(404).json({ message: "Echec" });
       } else {
         res.json(data);
-        console.log("parcours chargés", data);
       }
     });
   },
@@ -105,7 +104,6 @@ const parcours = {
         res.status(404).json({ message: "error getParcoursById", err });
       } else {
         res.json(data);
-        console.log("parcours chargés", data);
       }
     });
   },

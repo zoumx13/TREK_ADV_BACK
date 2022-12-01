@@ -42,7 +42,7 @@ const reservations = {
   },
   //MODIFIER UNE RESERVATION
   modifyReservations: async (req, res) => {
-    const { openResa, maxClients, dateReservation, idGuide } = req.body;
+    const { openResa, maxClients, dateReservation, idGuide, clients } = req.body;
     try {
       parcoursSchema
         .findOneAndUpdate(
@@ -52,7 +52,8 @@ const reservations = {
               "reservations.$.openResa": openResa,
               "reservations.$.maxClients": maxClients,
               "reservations.$.dateReservation": dateReservation,
-              "reservations.$.idGuide[0].long": idGuide,
+              "reservations.$.idGuide": idGuide,
+              "reservations.$.clients" : clients
             },
           },
           { new: true }
@@ -92,26 +93,20 @@ const reservations = {
       const identifiant = req.user.identifiant;
       const parcourId = req.body.parcoursId;
       const resaId = req.body.resaId;
-      console.log(parcourId);
-      console.log(resaId);
-      console.log(user);
       parcoursSchema.findById(parcourId, (err, docs) => {
         // accéder à THE Resa grâce à un find dans la docs , mettre une () avec un param "resa" puis comparé l'id "spé" de la resa avec equals
         const theResa = docs.reservations.find((resa) =>
           resa._id.equals(req.body.resaId)
         );
-        console.log(theResa);
         if (!theResa) {
           res.status(404).send("Resa not found");
         } else {
-          console.log(theResa.clients);
           if (!theResa.clients.length <= 0) {
             theResa.clients.push({
               idClient: user,
               identifiant: identifiant,
               date: Date(),
             });
-            console.log("1");
           } else {
             const resa = {
               idClient: user,
@@ -120,15 +115,12 @@ const reservations = {
             };
 
             theResa.clients = resa;
-            console.log("2");
           }
-          console.log(theResa);
           docs.save((err) => {
             if (!err) {
               res.json({ message: "resa validée" });
             } else {
               res.status(500).send(err);
-              console.log(err);
             }
           });
         }
@@ -152,17 +144,14 @@ const reservations = {
     User.findById(req.body.userId, async (err, user) => {
       if (user == null) {
         res.status(404).json({ message: "invalid User" });
-        console.log("invalid user");
       } else {
         userGuide = user._id;
         // userGuide = userGuide.replace("''", )
-        console.log("profil :", userGuide);
       }
     });
     parcoursSchema.find({}, (err, data) => {
       if (err) {
         res.status(404).json({ message: "Echec" });
-        console.log("oups");
       } else {
         for (let i = 0; i < data.length; i++) {
           if (
@@ -171,7 +160,6 @@ const reservations = {
           ) {
             for (let y = 0; y < data[i].reservations.length; y++) {
               if (data[i].reservations[y].idGuide == userGuide) {
-                console.log("IMAGE :", data[i].imgIllustration);
                 resa.push({
                   idparcours: data[i]._id,
                   nomParcours: data[i].nomParcours,
@@ -191,14 +179,10 @@ const reservations = {
     parcoursSchema.findById(req.params.idParcours, (err, data) => {
       if (err) {
         res.status(404).json({ message: "error getResaById", err });
-        console.log("oups");
       } else {
         result.push(data);
-        console.log("parcours chargé", data);
-        console.log("resa chargé", data.reservations);
         data.reservations.map((item) => {
           if (item._id == req.params.idResa) {
-            console.log("match id reservation");
             result.push(item);
             result.push(item.clients);
             res.json(result);
@@ -208,38 +192,6 @@ const reservations = {
         });
       }
     });
-  },
-  //AJOUT D'UN GUIDE A UNE RESERVATION
-  addGuideReservations: (req, res) => {
-    const { idGuide, resaId } = req.body;
-
-    try {
-      return parcoursSchema.findById(
-        // trouve le Parcour grâce à son id du params
-        req.params.id,
-        // appel un callback, pour accéder à docs
-        (err, docs) => {
-          // accéder à THE Resa grâce à un find dans la docs , mettre une () avec un param "resa" puis comparé l'id "spé" de la resa avec equals
-          const theResa = docs.reservations.find((resa) =>
-            resa._id.equals(resaId)
-          );
-          if (!theResa) {
-            return res.status(404).send("Resa not found");
-          } else {
-            theResa.idGuide = idGuide;
-            return docs.save((err) => {
-              if (!err) {
-                return res.status(200).send(docs);
-              } else {
-                return res.status(501).send(err);
-              }
-            });
-          }
-        }
-      );
-    } catch (err) {
-      return res.status(409).send(err);
-    }
   },
   // AFFICHAGE PROCHAINE RESA ADMIN
   nextReservation: async (req, res) => {
@@ -251,7 +203,6 @@ const reservations = {
         res.status(404).json({ message: "erreur" });
       } else {
         data.map((reservations) => {
-          // console.log("RESERVATION.RESA ", reservations.reservations)
           for (let i = 0; i < reservations.reservations.length; i++) {
             let searchDate = new Date(
               reservations.reservations[i].dateReservation
