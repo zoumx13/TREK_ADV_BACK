@@ -42,24 +42,118 @@ const reservations = {
   },
   //MODIFIER UNE RESERVATION
   modifyReservations: async (req, res) => {
-    const { openResa, maxClients, dateReservation, idGuide, clients } = req.body;
+    const { openResa, maxClients, dateReservation, idGuide, clients } =
+      req.body;
     try {
-      parcoursSchema
-        .findOneAndUpdate(
-          { _id: req.params.idParcours, "reservations._id": req.params.idResa },
-          {
-            $set: {
-              "reservations.$.openResa": openResa,
-              "reservations.$.maxClients": maxClients,
-              "reservations.$.dateReservation": dateReservation,
-              "reservations.$.idGuide": idGuide,
-              "reservations.$.clients" : clients
+      if (openResa === true || openResa === false) {
+        parcoursSchema
+          .findOneAndUpdate(
+            {
+              _id: req.params.idParcours,
+              "reservations._id": req.params.idResa,
             },
-          },
-          { new: true }
-        )
-        .then((docs) => res.json({ message: "Réservation modifiée", docs }))
-        .catch((err) => res.status(400).send(err));
+
+            {
+              $set: {
+                "reservations.$.openResa": openResa,
+              },
+            },
+            { new: true }
+          )
+          .then((docs) => res.json({ message: "Réservation modifiée", docs }))
+          .catch((err) => res.status(400).send(err));
+      }
+      if (maxClients) {
+        parcoursSchema
+          .findOneAndUpdate(
+            {
+              _id: req.params.idParcours,
+              "reservations._id": req.params.idResa,
+            },
+
+            {
+              $set: {
+                "reservations.$.maxClients": maxClients,
+              },
+            },
+            { new: true }
+          )
+          .then((docs) => res.json({ message: "Réservation modifiée", docs }))
+          .catch((err) => res.status(400).send(err));
+      }
+      if (dateReservation) {
+        parcoursSchema
+          .findOneAndUpdate(
+            {
+              _id: req.params.idParcours,
+              "reservations._id": req.params.idResa,
+            },
+
+            {
+              $set: {
+                "reservations.$.dateReservation": dateReservation,
+              },
+            },
+            { new: true }
+          )
+          .then((docs) => res.json({ message: "Réservation modifiée", docs }))
+          .catch((err) => res.status(400).send(err));
+      }
+      if (idGuide) {
+        if (idGuide === "deleteGuide") {
+          parcoursSchema
+            .findOneAndUpdate(
+              {
+                _id: req.params.idParcours,
+                "reservations._id": req.params.idResa,
+              },
+
+              {
+                $set: {
+                  "reservations.$.idGuide": "",
+                },
+              },
+              { new: true }
+            )
+            .then((docs) => res.json({ message: "Réservation modifiée", docs }))
+            .catch((err) => res.status(400).send(err));
+        } else {
+          parcoursSchema
+            .findOneAndUpdate(
+              {
+                _id: req.params.idParcours,
+                "reservations._id": req.params.idResa,
+              },
+
+              {
+                $set: {
+                  "reservations.$.idGuide": idGuide,
+                },
+              },
+              { new: true }
+            )
+            .then((docs) => res.json({ message: "Réservation modifiée", docs }))
+            .catch((err) => res.status(400).send(err));
+        }
+      }
+      if (clients) {
+        parcoursSchema
+          .findOneAndUpdate(
+            {
+              _id: req.params.idParcours,
+              "reservations._id": req.params.idResa,
+            },
+
+            {
+              $set: {
+                "reservations.$.clients": clients,
+              },
+            },
+            { new: true }
+          )
+          .then((docs) => res.json({ message: "Réservation modifiée", docs }))
+          .catch((err) => res.status(400).send(err));
+      }
     } catch (err) {
       return res.status(400).send(err);
     }

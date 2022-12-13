@@ -23,7 +23,7 @@ const users = {
           prenom: req.body.prenom,
           annees_exp: req.body.annees_exp,
           photo_profil: "defaultprofil.jpg",
-          dateInscription: Date()
+          dateInscription: Date(),
         });
         newUser.save((err, data) => {
           if (err) {
@@ -89,7 +89,7 @@ const users = {
             photo_profil: data.photo_profil,
             annees_exp: data.annees_exp,
             description: data.description,
-          }
+          },
         });
       }
     });
@@ -186,9 +186,9 @@ const users = {
                     lastProfilPicture;
                   fs.unlink(path, (err) => {
                     if (err) {
-                      res.staus(400).json(err)
+                      res.staus(400).json(err);
                     } else {
-                      res.status(200)
+                      res.status(200);
                     }
                   });
                 }
@@ -272,14 +272,14 @@ const users = {
 
   // DeleteUser: async (req, res) => {},
   //GET ALL USERS
-  AllUsers: async (req,res) => {
-    UserModel.find({},(err, data)=>{
-      if(err){
+  AllUsers: async (req, res) => {
+    UserModel.find({}, (err, data) => {
+      if (err) {
         res.status(404).json({ message: "Echec" });
-      }else{
+      } else {
         res.json(data);
       }
-    })
+    });
   },
   // ListGuide: async (req, res) => {
   //   const userSearch = [];
@@ -365,8 +365,7 @@ const users = {
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-    res.status(200).json({message : "mail password sent"})
+    res.status(200).json({ message: "mail password sent" });
   },
-
 };
 module.exports = users;

@@ -1,6 +1,5 @@
 const parcoursSchema = require("../models/ParcoursSchema");
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
 
 const parcours = {
   //CREER UN PARCOURS ADMIN
@@ -27,7 +26,7 @@ const parcours = {
   addImgParcours: (req, res) => {
     if (req.file) {
       const name = req.file.filename;
-      const id = req.params.id
+      const id = req.params.id;
       if (id) {
         const filter = { _id: id };
 
@@ -60,23 +59,20 @@ const parcours = {
     });
   },
   //MODIFIER PARCOURS ADMIN
-  modifyParcours: (req,res) => {
-    const nomParcours = req.body.nomParcours;
-    const dureeParcours = req.body.dureeParcours;
-    const prix = req.body.prix;
-    const description = req.body.description;
-    const niveauDifficulte = req.body.niveauDifficulte;
+  modifyParcours: (req, res) => {
+    const { nomParcours, dureeParcours, prix, description, niveauDifficulte } =
+      req.body;
     try {
       parcoursSchema
         .findOneAndUpdate(
           { _id: req.params.id },
           {
             $set: {
-              "nomParcours": nomParcours,
-              "dureeParcours": dureeParcours,
-              "prix": prix,
-              "description": description,
-              "niveauDifficulte": niveauDifficulte,
+              nomParcours: nomParcours,
+              dureeParcours: dureeParcours,
+              prix: prix,
+              description: description,
+              niveauDifficulte: niveauDifficulte,
             },
           },
           { new: true }
@@ -107,12 +103,12 @@ const parcours = {
       }
     });
   },
-  
+
   //CREER ETAPE ADMIN
   addStep: async (req, res) => {
     try {
       const idStep = new mongoose.Types.ObjectId();
-      const filter = { _id: req.params.id }
+      const filter = { _id: req.params.id };
       const update = {
         etape: [
           {
@@ -128,15 +124,16 @@ const parcours = {
             _id: idStep,
           },
         ],
-      }
+      };
       parcoursSchema
-        .findByIdAndUpdate( filter, 
+        .findByIdAndUpdate(
+          filter,
           {
-            $push: update
-          },  
+            $push: update,
+          },
           {
             new: true,
-          },
+          }
         )
         .then((newObject) => res.json({ message: "étape publiée", idStep }))
         .catch((err) => res.status(400).send(err));
